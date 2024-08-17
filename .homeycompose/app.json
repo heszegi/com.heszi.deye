@@ -25,6 +25,11 @@
     "name": "Andras Heszegi",
     "email": "heszegi@gmail.com"
   },
+  "source": "https://github.com/heszegi/com.heszi.deye",
+  "bugs": {
+    "url": "https://github.com/heszegi/com.heszi.deye/issues"
+  },
+  "homepage": "https://heszi.com",
   "tags": {
     "en": [
       "solar",
