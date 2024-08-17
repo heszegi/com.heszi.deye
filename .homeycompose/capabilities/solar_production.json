@@ -1,0 +1,10 @@
+{
+    "type": "boolean",
+    "title": { "en": "Solar power production" },
+    "desc": { "en": "True when solar power produced" },
+    "insights": false,
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "icon": "/drivers/deye_station/assets/solar_production.svg"
+  }

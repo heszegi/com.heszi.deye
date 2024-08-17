@@ -1,0 +1,464 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "com.heszi.deye",
+  "version": "0.1.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "brandColor": "#005CB9",
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Deye Solar Systems"
+  },
+  "description": {
+    "en": "DeyeCloud connection for Deye Solar Systems"
+  },
+  "category": [
+    "energy"
+  ],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Andras Heszegi",
+    "email": "heszegi@gmail.com"
+  },
+  "tags": {
+    "en": [
+      "solar",
+      "solar station",
+      "battery"
+    ]
+  },
+  "flow": {
+    "triggers": [
+      {
+        "id": "station_data_updated",
+        "highlight": true,
+        "title": {
+          "en": "Station data updated"
+        },
+        "tokens": [
+          {
+            "name": "measure_battery",
+            "title": {
+              "en": "Battery charge"
+            },
+            "type": "number",
+            "example": 89
+          },
+          {
+            "name": "measure_battery_power",
+            "title": {
+              "en": "Power from battery"
+            },
+            "type": "number",
+            "example": 333
+          },
+          {
+            "name": "measure_consumption_power",
+            "title": {
+              "en": "Power consumption"
+            },
+            "type": "number",
+            "example": 277
+          },
+          {
+            "name": "measure_grid_power",
+            "title": {
+              "en": "Power from grid"
+            },
+            "type": "number",
+            "example": 7
+          },
+          {
+            "name": "measure_solar_power",
+            "title": {
+              "en": "Power from solar cells"
+            },
+            "type": "number",
+            "example": 1000
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          }
+        ]
+      },
+      {
+        "id": "measure_battery_power_changed",
+        "title": {
+          "en": "Power from the battery changed"
+        },
+        "tokens": [
+          {
+            "name": "measure_battery_power",
+            "title": {
+              "en": "Power from the battery"
+            },
+            "type": "number",
+            "example": 333
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          }
+        ]
+      },
+      {
+        "id": "measure_consumption_power_changed",
+        "title": {
+          "en": "Power consumption of the house changed"
+        },
+        "tokens": [
+          {
+            "name": "measure_consumption_power",
+            "title": {
+              "en": "Power consumption of the house"
+            },
+            "type": "number",
+            "example": 277
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          }
+        ]
+      },
+      {
+        "id": "measure_grid_power_changed",
+        "title": {
+          "en": "Power used from the grid changed"
+        },
+        "tokens": [
+          {
+            "name": "measure_grid_power",
+            "title": {
+              "en": "Power used from the grid"
+            },
+            "type": "number",
+            "example": 7
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          }
+        ]
+      },
+      {
+        "id": "measure_solar_power_changed",
+        "title": {
+          "en": "Power from the solar cells changed"
+        },
+        "tokens": [
+          {
+            "name": "measure_solar_power",
+            "title": {
+              "en": "Power from the solar cells"
+            },
+            "type": "number",
+            "example": 1000
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "battery_charging",
+        "title": {
+          "en": "!{{Battery|Battery not}} charging"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          }
+        ]
+      },
+      {
+        "id": "grid_feeding",
+        "title": {
+          "en": "!{{Feeding|Not feeding}} the grid"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          }
+        ]
+      },
+      {
+        "id": "solar_production",
+        "title": {
+          "en": "Solar power !{{available|unavailable}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          }
+        ]
+      }
+    ]
+  },
+  "drivers": [
+    {
+      "name": {
+        "en": "Deye Station"
+      },
+      "class": "solarpanel",
+      "capabilities": [
+        "measure_battery",
+        "grid_feeding",
+        "battery_charging",
+        "solar_production",
+        "measure_solar_power",
+        "measure_battery_power",
+        "measure_consumption_power",
+        "measure_grid_power",
+        "address",
+        "owner"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "xlarge": "/drivers/deye_station/assets/images/xlarge.png",
+        "large": "/drivers/deye_station/assets/images/large.png",
+        "small": "/drivers/deye_station/assets/images/small.png"
+      },
+      "icon": "/drivers/deye_station/assets/icon.svg",
+      "pair": [
+        {
+          "id": "login_credentials",
+          "template": "login_credentials",
+          "options": {
+            "title": {
+              "en": "Login to DeyeCloud"
+            },
+            "logo": "icon.svg",
+            "usernameLabel": {
+              "en": "E-mail address"
+            },
+            "usernamePlaceholder": {
+              "en": "john@doe.com"
+            },
+            "passwordLabel": {
+              "en": "Password"
+            },
+            "passwordPlaceholder": {
+              "en": "Password"
+            }
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          },
+          "options": {
+            "singular": true
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "repair": [
+        {
+          "id": "login_credentials",
+          "template": "login_credentials",
+          "options": {
+            "title": {
+              "en": "Login to DeyeCloud"
+            },
+            "logo": "icon.svg",
+            "usernameLabel": {
+              "en": "E-mail address"
+            },
+            "usernamePlaceholder": {
+              "en": "john@doe.com"
+            },
+            "passwordLabel": {
+              "en": "Password"
+            },
+            "passwordPlaceholder": {
+              "en": "Password"
+            }
+          }
+        }
+      ],
+      "id": "deye_station"
+    }
+  ],
+  "capabilities": {
+    "address": {
+      "type": "string",
+      "title": {
+        "en": "Station address"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/address.svg"
+    },
+    "battery_charging": {
+      "type": "boolean",
+      "title": {
+        "en": "Battery charging"
+      },
+      "desc": {
+        "en": "True when the battery is charging"
+      },
+      "insights": false,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/battery_charging.svg"
+    },
+    "grid_feeding": {
+      "type": "boolean",
+      "title": {
+        "en": "Feeding the grid"
+      },
+      "desc": {
+        "en": "True when power uploading to the grid."
+      },
+      "insights": false,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/grid_feeding.svg"
+    },
+    "measure_battery_power": {
+      "type": "number",
+      "title": {
+        "en": "Power from battery"
+      },
+      "units": {
+        "en": "W"
+      },
+      "insights": true,
+      "desc": {
+        "en": "Power from the battery in watt (W)"
+      },
+      "chartType": "stepLine",
+      "decimals": 2,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/battery_power.svg"
+    },
+    "measure_consumption_power": {
+      "type": "number",
+      "title": {
+        "en": "Power consumption"
+      },
+      "units": {
+        "en": "W"
+      },
+      "insights": true,
+      "desc": {
+        "en": "Power consumption of the consumers in watt (W)"
+      },
+      "chartType": "stepLine",
+      "decimals": 2,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/house_power.svg"
+    },
+    "measure_grid_power": {
+      "type": "number",
+      "title": {
+        "en": "Power from grid"
+      },
+      "units": {
+        "en": "W"
+      },
+      "insights": true,
+      "desc": {
+        "en": "Power used from the grid in watt (W)"
+      },
+      "chartType": "stepLine",
+      "decimals": 2,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/grid_power.svg"
+    },
+    "measure_solar_power": {
+      "type": "number",
+      "title": {
+        "en": "Power from solar cells"
+      },
+      "units": {
+        "en": "W"
+      },
+      "insights": true,
+      "desc": {
+        "en": "Power from the solar cells in watt (W)"
+      },
+      "chartType": "stepLine",
+      "decimals": 2,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/solar_power.svg"
+    },
+    "owner": {
+      "type": "string",
+      "title": {
+        "en": "Station owner"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/owner.svg"
+    },
+    "solar_production": {
+      "type": "boolean",
+      "title": {
+        "en": "Solar power production"
+      },
+      "desc": {
+        "en": "True when solar power produced"
+      },
+      "insights": false,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/solar_production.svg"
+    }
+  }
+}

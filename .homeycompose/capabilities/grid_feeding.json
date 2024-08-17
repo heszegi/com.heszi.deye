@@ -1,0 +1,10 @@
+{
+    "type": "boolean",
+    "title": {"en": "Feeding the grid"},
+    "desc": {"en": "True when power uploading to the grid."},
+    "insights": false,
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "icon": "/drivers/deye_station/assets/grid_feeding.svg"
+  }

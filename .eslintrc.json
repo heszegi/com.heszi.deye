@@ -1,0 +1,7 @@
+
+{
+  "extends": "athom/homey-app",
+  "rules": {
+    "import/no-extraneous-dependencies": false
+  }
+}

@@ -1,0 +1,13 @@
+{
+    "type": "number",
+    "title": { "en": "Power from grid" },
+    "units": { "en": "W" },
+    "insights": true,
+    "desc": { "en": "Power used from the grid in watt (W)" },
+    "chartType": "stepLine",
+    "decimals": 2,
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "icon": "/drivers/deye_station/assets/grid_power.svg"
+  }

@@ -1,0 +1,10 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Station owner"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/drivers/deye_station/assets/owner.svg"
+}

@@ -1,0 +1,10 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Station address"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/drivers/deye_station/assets/address.svg"
+}

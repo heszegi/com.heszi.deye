@@ -1,0 +1,13 @@
+{
+    "type": "number",
+    "title": { "en": "Power from battery" },
+    "units": { "en": "W" },
+    "insights": true,
+    "desc": { "en": "Power from the battery in watt (W)" },
+    "chartType": "stepLine",
+    "decimals": 2,
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "icon": "/drivers/deye_station/assets/battery_power.svg"
+  }

@@ -1,0 +1,10 @@
+{
+    "type": "boolean",
+    "title": {"en": "Battery charging"},
+    "desc": {"en": "True when the battery is charging"},
+    "insights": false,
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "icon": "/drivers/deye_station/assets/battery_charging.svg"
+  }

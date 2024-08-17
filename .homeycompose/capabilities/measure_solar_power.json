@@ -1,0 +1,13 @@
+{
+    "type": "number",
+    "title": { "en": "Power from solar cells" },
+    "units": { "en": "W" },
+    "insights": true,
+    "desc": { "en": "Power from the solar cells in watt (W)" },
+    "chartType": "stepLine",
+    "decimals": 2,
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "icon": "/drivers/deye_station/assets/solar_power.svg"
+  }

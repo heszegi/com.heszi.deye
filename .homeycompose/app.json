@@ -1,0 +1,35 @@
+{
+  "id": "com.heszi.deye",
+  "version": "0.1.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "brandColor": "#005CB9",
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Deye Solar Systems"
+  },
+  "description": {
+    "en": "DeyeCloud connection for Deye Solar Systems"
+  },
+  "category": [
+    "energy"
+  ],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Andras Heszegi",
+    "email": "heszegi@gmail.com"
+  },
+  "tags": {
+    "en": [
+      "solar",
+      "solar station",
+      "battery"
+    ]
+  }
+}
