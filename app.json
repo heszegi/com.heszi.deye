@@ -244,6 +244,11 @@
         "address",
         "owner"
       ],
+      "energy": {
+        "batteries": [
+          "OTHER"
+        ]
+      },
       "platforms": [
         "local"
       ],
