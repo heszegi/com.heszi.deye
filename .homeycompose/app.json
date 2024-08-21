@@ -1,6 +1,6 @@
 {
   "id": "com.heszi.deye",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "brandColor": "#005CB9",
@@ -11,7 +11,7 @@
     "en": "Deye Solar Systems"
   },
   "description": {
-    "en": "DeyeCloud connection for Deye Solar Systems"
+    "en": "Monitor and track your Deye solar system informations"
   },
   "category": [
     "energy"
