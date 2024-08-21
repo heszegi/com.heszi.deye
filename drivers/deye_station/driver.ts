@@ -14,6 +14,11 @@ export default class DeyeStationDriver extends Homey.Driver {
    */
   async onInit() {
     this.log('MyDriver has been initialized');
+
+    this.registerCapabilityCondition('battery_charging');
+    this.registerCapabilityCondition('grid_feeding');
+    this.registerCapabilityCondition('solar_production');
+
     this.stationDataUpdated_card = this.homey.flow.getDeviceTriggerCard("station_data_updated");
   }
 
@@ -68,6 +73,12 @@ export default class DeyeStationDriver extends Homey.Driver {
       }
     });
     return Promise.resolve()
+  }
+
+  registerCapabilityCondition(capability: string) {
+    this.homey.flow.getConditionCard(capability).registerRunListener(async (args:any, state:any) => {
+      return (args.device as DeyeStationDevice).getCapabilityValue(capability);
+    });
   }
 
   triggerStationDataUpdated(device: Homey.FlowCardTriggerDevice.Device, tokens: any, state: any) {
