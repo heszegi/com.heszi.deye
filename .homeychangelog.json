@@ -4,5 +4,8 @@
   },
   "0.1.1": {
     "en": "Update driver images and app description"
+  },
+  "0.1.2": {
+    "en": "Register missing condition cards"
   }
 }
