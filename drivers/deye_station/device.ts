@@ -2,7 +2,7 @@
 
 import Homey from 'homey';
 import DeyeApp from '../../app';
-import { IDeyeStation, IDeyeStationLatestData, IDeyeToken } from '../../lib/deye_api';
+import { IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken } from '../../lib/deye_api';
 import DeyeStationDriver from './driver';
 
 const NORMAL_POLL_INTERVAL = 390;
@@ -14,7 +14,7 @@ export default class DeyeStationDevice extends Homey.Device {
 
   driver!: DeyeStationDriver;
   token!: IDeyeToken;
-  station!: IDeyeStation;
+  station!: IDeyeStationWithDevice;
   last!: IDeyeStationLatestData;
   polling?: NodeJS.Timeout;
 
@@ -29,6 +29,12 @@ export default class DeyeStationDevice extends Homey.Device {
 
     this.setCapabilityValue('address', this.station.locationAddress);
     this.setCapabilityValue('owner', this.station.name);
+
+    if(this.station.deviceTotal > 0 && this.station.deviceListItems.length){
+      this.setCapabilityValue('inverter_sn', this.station.deviceListItems[0].deviceSn);
+    }else{
+      this.setCapabilityValue('inverter_sn', 'No device found!');
+    }
 
     this.poll();
   }

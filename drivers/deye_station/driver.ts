@@ -38,7 +38,7 @@ export default class DeyeStationDriver extends Homey.Driver {
 
     session.setHandler('list_devices', async () => {
       try{
-        const stations = await (this.homey.app as DeyeApp).api.getStations(token);
+        const stations = await (this.homey.app as DeyeApp).api.getStationsWithDevice(token);
 
         return stations.map((station) => {
           return {

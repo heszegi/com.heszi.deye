@@ -11,7 +11,7 @@ export interface IDeyeToken {
   expiresIn:number;
 }
 
-export interface IDeyeStation {
+interface IDeyeStationBase {
   id: number;
   name: string;
   locationLat: number;
@@ -23,12 +23,25 @@ export interface IDeyeStation {
   installedCapacity: number;
   startOperatingTime: number;
   createdDate: number;
+  contactPhone: string;
+  ownerName: string;
+}
+
+export interface IDeyeStation extends IDeyeStationBase {
   batterySOC: number;
   connectionStatus: string;
   generationPower: number;
   lastUpdateTime: number; 
-  contactPhone: string;
-  ownerName: string;
+}
+
+export interface IDeyeStationWithDevice extends IDeyeStationBase {
+  type: string;
+  deviceTotal: number,
+  deviceListItems: {
+    deviceSn: string,
+    deviceType: string,
+    stationId: number
+  }[]
 }
 
 export interface IDeyeStationLatestData {
@@ -75,7 +88,7 @@ export default class DeyeAPI {
     throw new Error(`Deye login error! (${resp})`);
   }
 
-  async getStations(token: IDeyeToken) :Promise<IDeyeStation[]> {
+  async getStations(token: IDeyeToken): Promise<IDeyeStation[]> {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -86,7 +99,7 @@ export default class DeyeAPI {
       },
       data: JSON.stringify({
         page: 1,
-        size: 1,
+        size: 10,
       }),
     };
 
@@ -103,7 +116,36 @@ export default class DeyeAPI {
     throw new Error(`Error loading Stations list! (${resp})`);
   }
 
-  async getStationLatest(token: IDeyeToken, stationId: number) :Promise<IDeyeStationLatestData> {
+  async getStationsWithDevice(token: IDeyeToken): Promise<IDeyeStationWithDevice[]> {
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://eu1-developer.deyecloud.com/v1.0/station/listWithDevice',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token.accessToken}`,
+      },
+      data: JSON.stringify({
+        deviceType: "INVERTER",
+        page: 1,
+        size: 10,
+      }),
+    };
+
+    const resp = await axios.request(config);
+
+    if(resp.data?.success){
+      if(resp.data.stationTotal > 0 && resp.data.stationList.length > 0) {
+        return resp.data.stationList;
+      }
+
+      throw new Error(`No Station with Device found for this account! (${resp.data})`);
+    }
+
+    throw new Error(`Error loading Station with Device list! (${resp})`);
+  }
+
+  async getStationLatest(token: IDeyeToken, stationId: number): Promise<IDeyeStationLatestData> {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,

@@ -1,0 +1,10 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Inverter Serial Number"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/drivers/deye_station/assets/inverter.svg"
+}

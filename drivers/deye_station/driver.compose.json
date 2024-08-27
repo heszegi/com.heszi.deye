@@ -12,6 +12,7 @@
     "measure_battery_power",
     "measure_consumption_power",
     "measure_grid_power",
+    "inverter_sn",
     "address",
     "owner"
   ],
