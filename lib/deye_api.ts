@@ -64,7 +64,7 @@ export default class DeyeAPI {
 
     const resp = await axios.request(config);
 
-    if (resp.data.success) {
+    if (resp.data?.success) {
       return {
         accessToken: resp.data.accessToken,
         refreshToken: resp.data.refreshToken,
@@ -72,7 +72,7 @@ export default class DeyeAPI {
       };
     }
 
-    throw new Error('Deye login error!');
+    throw new Error(`Deye login error! (${resp})`);
   }
 
   async getStations(token: IDeyeToken) :Promise<IDeyeStation[]> {
@@ -92,15 +92,15 @@ export default class DeyeAPI {
 
     const resp = await axios.request(config);
 
-    if(resp.data.success){
-      if(resp.data.stationList.length > 0) {
+    if(resp.data?.success){
+      if(resp.data.total > 0 && resp.data.stationList.length > 0) {
         return resp.data.stationList;
       }
 
-      throw new Error('No Station found for this account!');
+      throw new Error(`No Station found for this account! (${resp.data})`);
     }
 
-    throw new Error('Error loading Stations list!');
+    throw new Error(`Error loading Stations list! (${resp})`);
   }
 
   async getStationLatest(token: IDeyeToken, stationId: number) :Promise<IDeyeStationLatestData> {
@@ -119,10 +119,10 @@ export default class DeyeAPI {
 
     const resp = await axios.request(config);
 
-    if(resp.data.success){
+    if(resp.data?.success){
       return resp.data;
     }
 
-    throw new Error('Error loading Station latest data!');
+    throw new Error(`Error loading Station latest data! (${resp})`);
   }
 }
