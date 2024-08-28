@@ -2,7 +2,7 @@
 
 import Homey from 'homey';
 import DeyeApp from '../../app';
-import { IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken } from '../../lib/deye_api';
+import { DATA_CENTER, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken } from '../../lib/deye_api';
 import DeyeStationDriver from './driver';
 
 const NORMAL_POLL_INTERVAL = 390;
@@ -13,6 +13,7 @@ export default class DeyeStationDevice extends Homey.Device {
   apiError = 0;
 
   driver!: DeyeStationDriver;
+  dataCenter!: DATA_CENTER;
   token!: IDeyeToken;
   station!: IDeyeStationWithDevice;
   last!: IDeyeStationLatestData;
@@ -24,6 +25,7 @@ export default class DeyeStationDevice extends Homey.Device {
   async onInit() {
     this.log('MyDevice has been initialized', this.getName());
 
+    this.dataCenter = this.getSetting('dataCenter');
     this.token = this.getSetting('token');
     this.station = this.getSetting('station');
 
@@ -90,7 +92,7 @@ export default class DeyeStationDevice extends Homey.Device {
     let latest: IDeyeStationLatestData;
 
     try {
-      latest = await this.api.getStationLatest(this.token, this.station.id);
+      latest = await this.api.getStationLatest(this.dataCenter, this.token, this.station.id);
 
       this.apiError = 0
       this.setAvailable();

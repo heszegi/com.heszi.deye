@@ -1,3 +1,12 @@
 {
-    "stationName": "Deye Station __id__"
+    "stationName": "Deye Station __id__",
+    "pair": {
+        "datacenter": {
+            "title": "Select Data Center",
+            "select": "Your station is located in",
+            "EMEA_APAC": "Europe, Africa, or the Asia-Pacific",
+            "AMEA": "North or South America",
+            "next": "Next"
+        }
+    }
 }

@@ -1,0 +1,41 @@
+<form class="homey-form" onsubmit="handleSubmit(event)">
+  <fieldset class="homey-form-group" style="margin: 2rem 0 4rem;">
+    <legend class="homey-form-legend" data-i18n="pair.datacenter.select"></legend>
+
+    <fieldset class="homey-form-radio-set">
+      <label class="homey-form-radio">
+        <input class="homey-form-radio-input" type="radio" name="choice" value="EMEA_APAC"/>
+        <span class="homey-form-radio-checkmark"></span>
+        <span class="homey-form-radio-text" data-i18n="pair.datacenter.EMEA_APAC"></span>
+      </label>
+      
+      <label class="homey-form-radio">
+        <input class="homey-form-radio-input" type="radio" name="choice" value="AMEA"/>
+        <span class="homey-form-radio-checkmark"></span>
+        <span class="homey-form-radio-text" data-i18n="pair.datacenter.AMEA"></span>
+      </label>
+    </fieldset>
+  </fieldset>
+
+  <button class="homey-button-primary-full" type="submit" data-i18n="pair.datacenter.next" id="submitBtn" disabled="disabled"></button>
+</form>
+
+<script>
+  Homey.setTitle( __('pair.datacenter.title') );
+
+  const submitBtn = document.getElementById('submitBtn');
+  const radioButtons = document.querySelectorAll('input[name="choice"]');
+  
+  let selected;
+  for (const radioButton of radioButtons) {
+      radioButton.addEventListener('change', (event) => {
+        selected = event.target.value;
+        submitBtn.disabled = false;
+      });
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    Homey.emit("datacenter", selected);
+  }
+</script>

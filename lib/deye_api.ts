@@ -5,6 +5,11 @@ import { sha256 } from 'js-sha256';
 
 const Homey = require('homey');
 
+export enum DATA_CENTER {
+  EMEA_APAC = 'EMEA_APAC',
+  AMEA = 'AMEA'
+}
+
 export interface IDeyeToken {
   accessToken:string;
   refreshToken:string; 
@@ -59,17 +64,26 @@ export interface IDeyeStationLatestData {
 }
 
 export default class DeyeAPI {
-  async login(email: string, password: string): Promise<IDeyeToken> {
 
+  getDataCenterUrl(dc: DATA_CENTER){
+    switch(dc){
+      case DATA_CENTER.AMEA :
+        return 'us1-developer.deyecloud.com';
+      default :
+        return 'eu1-developer.deyecloud.com';
+    }
+  }
+
+  async login(dc: DATA_CENTER, email: string, password: string): Promise<IDeyeToken> {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `https://eu1-developer.deyecloud.com/v1.0/account/token?appId=${Homey.env.APP_ID}`,
+      url: `https://${this.getDataCenterUrl(dc)}/v1.0/account/token?appId=${Homey.env[dc].APP_ID}`,
       headers: {
         'Content-Type': 'application/json',
       },
       data: JSON.stringify({
-        appSecret: Homey.env.APP_SECRET,
+        appSecret: Homey.env[dc].APP_SECRET,
         email,
         password: sha256(password),
       }),
@@ -88,11 +102,11 @@ export default class DeyeAPI {
     throw new Error(`Deye login error! (${resp})`);
   }
 
-  async getStations(token: IDeyeToken): Promise<IDeyeStation[]> {
+  async getStations(dc: DATA_CENTER, token: IDeyeToken): Promise<IDeyeStation[]> {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://eu1-developer.deyecloud.com/v1.0/station/list',
+      url: `https://${this.getDataCenterUrl(dc)}/v1.0/station/list`,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token.accessToken}`,
@@ -116,11 +130,11 @@ export default class DeyeAPI {
     throw new Error(`Error loading Stations list! (${resp})`);
   }
 
-  async getStationsWithDevice(token: IDeyeToken): Promise<IDeyeStationWithDevice[]> {
+  async getStationsWithDevice(dc: DATA_CENTER, token: IDeyeToken): Promise<IDeyeStationWithDevice[]> {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://eu1-developer.deyecloud.com/v1.0/station/listWithDevice',
+      url: `https://${this.getDataCenterUrl(dc)}/v1.0/station/listWithDevice`,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token.accessToken}`,
@@ -145,11 +159,11 @@ export default class DeyeAPI {
     throw new Error(`Error loading Station with Device list! (${resp})`);
   }
 
-  async getStationLatest(token: IDeyeToken, stationId: number): Promise<IDeyeStationLatestData> {
+  async getStationLatest(dc: DATA_CENTER, token: IDeyeToken, stationId: number): Promise<IDeyeStationLatestData> {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://eu1-developer.deyecloud.com/v1.0/station/latest',
+      url: `https://${this.getDataCenterUrl(dc)}/v1.0/station/latest`,
       headers: { 
         'Content-Type': 'application/json', 
         'Authorization': `Bearer ${token.accessToken}`,
