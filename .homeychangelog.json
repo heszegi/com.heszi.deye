@@ -10,5 +10,8 @@
   },
   "0.1.3": {
     "en": "Load and show inverter serial number"
+  },
+  "0.1.4": {
+    "en": "Add data center select functionality (need to re add devices)"
   }
 }
