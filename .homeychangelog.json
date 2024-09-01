@@ -13,5 +13,8 @@
   },
   "0.1.4": {
     "en": "Add data center select functionality (need to re add devices)"
+  },
+  "0.1.5": {
+    "en": "Improved erro handling, AMEA reginon Deye app details update"
   }
 }
