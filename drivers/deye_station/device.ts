@@ -19,6 +19,14 @@ export default class DeyeStationDevice extends Homey.Device {
   last!: IDeyeStationLatestData;
   polling?: NodeJS.Timeout;
 
+  validateNumberValues = (value: any): number => {
+    return isNaN(value) ? NaN : value;
+  }
+
+  validateStringValues = (value: any): string => {
+    return value.toString() === value ? value : 'Invalid value!';
+  }
+
   /**
    * onInit is called when the device is initialized.
    */
@@ -29,11 +37,11 @@ export default class DeyeStationDevice extends Homey.Device {
     this.token = this.getSetting('token');
     this.station = this.getSetting('station');
 
-    this.setCapabilityValue('address', this.station.locationAddress);
-    this.setCapabilityValue('owner', this.station.name);
+    this.setCapabilityValue('address', this.validateStringValues(this.station.locationAddress));
+    this.setCapabilityValue('owner', this.validateStringValues(this.station.name));
 
     if(this.station.deviceTotal > 0 && this.station.deviceListItems.length){
-      this.setCapabilityValue('inverter_sn', this.station.deviceListItems[0].deviceSn);
+      this.setCapabilityValue('inverter_sn', this.validateStringValues(this.station.deviceListItems[0].deviceSn));
     }else{
       this.setCapabilityValue('inverter_sn', 'No device found!');
     }
@@ -102,7 +110,10 @@ export default class DeyeStationDevice extends Homey.Device {
       if(++this.apiError < 10) {
         const pollDelay = MINIMUM_POLL_INTERVAL * 1000 * this.apiError;
         this.polling = this.homey.setTimeout(this.poll.bind(this), pollDelay);
+      } else {
+        this.log('Reached max number of API call tries!');
       }
+      
       this.setUnavailable();
       return;
     }
@@ -118,11 +129,11 @@ export default class DeyeStationDevice extends Homey.Device {
       this.setCapabilityValue('grid_feeding', grid_feeding);
 
       const dataTokens = {
-        measure_battery: latest.batterySOC,
-        measure_battery_power: latest.batteryPower,
-        measure_consumption_power: latest.consumptionPower,
-        measure_grid_power: latest.wirePower,
-        measure_solar_power: latest.generationPower
+        measure_battery: this.validateNumberValues(latest.batterySOC),
+        measure_battery_power: this.validateNumberValues(latest.batteryPower),
+        measure_consumption_power: this.validateNumberValues(latest.consumptionPower),
+        measure_grid_power: this.validateNumberValues(latest.wirePower),
+        measure_solar_power: this.validateNumberValues(latest.generationPower)
       }
 
       this.setCapabilityValue('measure_battery', dataTokens.measure_battery);
