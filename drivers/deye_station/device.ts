@@ -5,9 +5,6 @@ import DeyeApp from '../../app';
 import { DATA_CENTER, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken } from '../../lib/deye_api';
 import DeyeStationDriver from './driver';
 
-const NORMAL_POLL_INTERVAL = 390;
-const MINIMUM_POLL_INTERVAL = 30;
-
 export default class DeyeStationDevice extends Homey.Device {
   api = (this.homey.app as DeyeApp).api;
   apiError = 0;
@@ -16,6 +13,8 @@ export default class DeyeStationDevice extends Homey.Device {
   dataCenter!: DATA_CENTER;
   token!: IDeyeToken;
   station!: IDeyeStationWithDevice;
+  normalPollInterval!: number;
+  minimumPollInterval!: number;
   last!: IDeyeStationLatestData;
   polling?: NodeJS.Timeout;
 
@@ -36,6 +35,8 @@ export default class DeyeStationDevice extends Homey.Device {
     this.dataCenter = this.getSetting('dataCenter');
     this.token = this.getSetting('token');
     this.station = this.getSetting('station');
+    this.normalPollInterval = this.getSetting('normalPollInterval');
+    this.minimumPollInterval = this.getSetting('minimumPollInterval');
 
     this.setCapabilityValue('address', this.validateStringValues(this.station.locationAddress));
     this.setCapabilityValue('owner', this.validateStringValues(this.station.name));
@@ -74,6 +75,8 @@ export default class DeyeStationDevice extends Homey.Device {
     changedKeys: string[];
   }): Promise<string | void> {
     this.log("MyDevice settings where changed");
+    this.normalPollInterval = newSettings.normalPollInterval as number;
+    this.minimumPollInterval = newSettings.minimumPollInterval as number;
   }
 
   /**
@@ -108,7 +111,7 @@ export default class DeyeStationDevice extends Homey.Device {
       this.log('Get sattion latest:', err);
 
       if(++this.apiError < 10) {
-        const pollDelay = MINIMUM_POLL_INTERVAL * 1000 * this.apiError;
+        const pollDelay = this.minimumPollInterval * 1000 * this.apiError;
         this.polling = this.homey.setTimeout(this.poll.bind(this), pollDelay);
       } else {
         this.log('Reached max number of API call tries!');
@@ -147,8 +150,8 @@ export default class DeyeStationDevice extends Homey.Device {
       this.last = latest;
     }
 
-    const tillNext = (latest.lastUpdateTime + NORMAL_POLL_INTERVAL) - Math.floor(Date.now() / 1000);
-    const pollDelay = (tillNext <= 0 ? MINIMUM_POLL_INTERVAL : tillNext) * 1000;
+    const tillNext = (latest.lastUpdateTime + this.normalPollInterval) - Math.floor(Date.now() / 1000);
+    const pollDelay = (tillNext <= 0 ? this.minimumPollInterval : tillNext) * 1000;
     this.polling = this.homey.setTimeout(this.poll.bind(this), pollDelay);
   }
 }

@@ -1,0 +1,28 @@
+[
+  {
+    "id": "normalPollInterval",
+    "type": "number",
+    "label": {
+      "en": "Normal Polling Interval (seconds)"
+    },
+    "value": 390,
+    "min": 300,
+    "max": 3600,
+    "hint": {
+      "en": "The interval while station data updated in the cloud. Default: 390"
+    }
+  },
+  {
+    "id": "minimumPollInterval",
+    "type": "number",
+    "label": {
+      "en": "Minimum Polling Interval (seconds)"
+    },
+    "value": 30,
+    "min": 10,
+    "max": 300,
+    "hint": {
+      "en": "The interval while looking for updated station data after the Normal Polling Interval expired. Default: 30"
+    }
+  }
+]
