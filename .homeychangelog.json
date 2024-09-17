@@ -15,6 +15,9 @@
     "en": "Add data center select functionality (need to re add devices)"
   },
   "0.1.5": {
-    "en": "Improved erro handling, AMEA region Deye app details updated"
+    "en": "Improved error handling, AMEA region Deye app details updated"
+  },
+  "0.1.6": {
+    "en": "Add set Solar Sell action card"
   }
 }
