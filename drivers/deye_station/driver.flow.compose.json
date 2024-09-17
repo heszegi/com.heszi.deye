@@ -100,5 +100,28 @@
       "title": { "en": "Solar power !{{available|unavailable}}" }
     }
   ],
-  "actions": []
+  "actions": [
+    {
+      "id": "set_solar_sell",
+      "title": { 
+        "en": "Set Solar Sell to..."
+      },
+      "titleFormatted": {
+        "en": "Set Solar Sell to [[onoff]]"
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "onoff",
+          "title": {
+            "en": "On/Off"
+          },
+          "values": [
+            { "id": "on", "title": { "en": "On" } },
+            { "id": "off", "title": { "en": "Off" } }
+          ]
+        }
+      ]
+    }
+  ]
 }

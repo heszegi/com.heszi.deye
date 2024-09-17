@@ -2,7 +2,7 @@
 
 import Homey from 'homey';
 import DeyeApp from '../../app';
-import { DATA_CENTER, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken } from '../../lib/deye_api';
+import { DATA_CENTER, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken, SOLAR_SELL } from '../../lib/deye_api';
 import DeyeStationDriver from './driver';
 
 export default class DeyeStationDevice extends Homey.Device {
@@ -37,6 +37,15 @@ export default class DeyeStationDevice extends Homey.Device {
     this.station = this.getSetting('station');
     this.normalPollInterval = this.getSetting('normalPollInterval');
     this.minimumPollInterval = this.getSetting('minimumPollInterval');
+
+    /*
+    TODO
+    Capability not added because we don't know the device state
+    this.setCapabilityValue('solar_sell', true); // Get this state somehow?
+    this.registerCapabilityListener('solar_sell', (e, o) => {
+      console.log('button solar sell pressed',e, o)
+    })  
+    */
 
     this.setCapabilityValue('address', this.validateStringValues(this.station.locationAddress));
     this.setCapabilityValue('owner', this.validateStringValues(this.station.name));
@@ -153,6 +162,10 @@ export default class DeyeStationDevice extends Homey.Device {
     const tillNext = (latest.lastUpdateTime + this.normalPollInterval) - Math.floor(Date.now() / 1000);
     const pollDelay = (tillNext <= 0 ? this.minimumPollInterval : tillNext) * 1000;
     this.polling = this.homey.setTimeout(this.poll.bind(this), pollDelay);
+  }
+
+  async setSolarSell(value: SOLAR_SELL) {
+    return this.api.setSolarSell(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
   }
 }
 

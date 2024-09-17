@@ -1,0 +1,10 @@
+{
+    "type": "boolean",
+    "title": { "en": "Solar Sell" },
+    "desc": { "en": "When this item is active, the surplus energy can be sold back to grid." },
+    "insights": false,
+    "getable": true,
+    "setable": true,
+    "uiComponent": "button",
+    "icon": "/drivers/deye_station/assets/grid_feeding.svg"
+  }

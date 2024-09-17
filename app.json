@@ -229,6 +229,45 @@
           }
         ]
       }
+    ],
+    "actions": [
+      {
+        "id": "set_solar_sell",
+        "title": {
+          "en": "Set Solar Sell to..."
+        },
+        "titleFormatted": {
+          "en": "Set Solar Sell to [[onoff]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          },
+          {
+            "type": "dropdown",
+            "name": "onoff",
+            "title": {
+              "en": "On/Off"
+            },
+            "values": [
+              {
+                "id": "on",
+                "title": {
+                  "en": "On"
+                }
+              },
+              {
+                "id": "off",
+                "title": {
+                  "en": "Off"
+                }
+              }
+            ]
+          }
+        ]
+      }
     ]
   },
   "drivers": [
@@ -511,6 +550,20 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/drivers/deye_station/assets/solar_production.svg"
+    },
+    "solar_sell": {
+      "type": "boolean",
+      "title": {
+        "en": "Solar Sell"
+      },
+      "desc": {
+        "en": "When this item is active, the surplus energy can be sold back to grid."
+      },
+      "insights": false,
+      "getable": true,
+      "setable": true,
+      "uiComponent": "button",
+      "icon": "/drivers/deye_station/assets/grid_feeding.svg"
     }
   }
 }

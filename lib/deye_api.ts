@@ -1,9 +1,14 @@
 'use strict';
 
-import axios from 'axios';
+import axios, { AxiosRequestHeaders } from 'axios';
 import { sha256 } from 'js-sha256';
 
 const Homey = require('homey');
+
+export enum SOLAR_SELL {
+  ON = 'on',
+  OFF = 'off'
+}
 
 export enum DATA_CENTER {
   EMEA_APAC = 'EMEA_APAC',
@@ -63,6 +68,16 @@ export interface IDeyeStationLatestData {
     lastUpdateTime: number;
 }
 
+export interface IDeyeCommissionResponse {
+  code: string;
+  msg: string;
+  success: boolean;
+  requestId: string;
+  orderId: number;
+  collectionTime: number;
+  connectionStatus: number;
+}
+
 export default class DeyeAPI {
 
   getDataCenterUrl(dc: DATA_CENTER){
@@ -74,22 +89,36 @@ export default class DeyeAPI {
     }
   }
 
-  async login(dc: DATA_CENTER, email: string, password: string): Promise<IDeyeToken> {
+  getRequestConfig(method: string, dc: DATA_CENTER, token: IDeyeToken | null, api: string, payload: any): axios.AxiosRequestConfig<any> {
     const config = {
-      method: 'post',
+      method: method,
       maxBodyLength: Infinity,
-      url: `https://${this.getDataCenterUrl(dc)}/v1.0/account/token?appId=${Homey.env[dc].APP_ID}`,
-      headers: {
-        'Content-Type': 'application/json',
+      url: `https://${this.getDataCenterUrl(dc)}${api}`,
+      headers: <AxiosRequestHeaders>{
+        'Content-Type': 'application/json'
       },
-      data: JSON.stringify({
-        appSecret: Homey.env[dc].APP_SECRET,
-        email,
-        password: sha256(password),
-      }),
-    };
+      data : JSON.stringify(payload)
+    }
 
-    const resp = await axios.request(config);
+    if(token) config.headers['Authorization'] = `Bearer ${token.accessToken}`;
+
+    return config;
+  }
+
+  getPostRequestConfig(dc: DATA_CENTER, token: IDeyeToken | null, api: string, payload: any): axios.AxiosRequestConfig<any> {
+    return this.getRequestConfig('post', dc, token, api, payload);
+  }
+
+  getGetRequestConfig(dc: DATA_CENTER, token: IDeyeToken | null, api: string, payload: any): axios.AxiosRequestConfig<any> {
+    return this.getRequestConfig('get', dc, token, api, payload);
+  }
+
+  async login(dc: DATA_CENTER, email: string, password: string): Promise<IDeyeToken> {
+    const resp = await axios.request(this.getPostRequestConfig(dc, null, `/v1.0/account/token?appId=${Homey.env[dc].APP_ID}`,{
+      appSecret: Homey.env[dc].APP_SECRET,
+      email,
+      password: sha256(password),
+    }));
 
     if (resp.data?.success) {
       return {
@@ -103,21 +132,10 @@ export default class DeyeAPI {
   }
 
   async getStations(dc: DATA_CENTER, token: IDeyeToken): Promise<IDeyeStation[]> {
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `https://${this.getDataCenterUrl(dc)}/v1.0/station/list`,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token.accessToken}`,
-      },
-      data: JSON.stringify({
-        page: 1,
-        size: 10,
-      }),
-    };
-
-    const resp = await axios.request(config);
+    const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/station/list',{
+      page: 1,
+      size: 10,
+    }));
 
     if(resp.data?.success){
       if(resp.data.total > 0 && resp.data.stationList.length > 0) {
@@ -131,22 +149,11 @@ export default class DeyeAPI {
   }
 
   async getStationsWithDevice(dc: DATA_CENTER, token: IDeyeToken): Promise<IDeyeStationWithDevice[]> {
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `https://${this.getDataCenterUrl(dc)}/v1.0/station/listWithDevice`,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token.accessToken}`,
-      },
-      data: JSON.stringify({
-        deviceType: "INVERTER",
-        page: 1,
-        size: 10,
-      }),
-    };
-
-    const resp = await axios.request(config);
+    const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/station/listWithDevice',{
+      deviceType: "INVERTER",
+      page: 1,
+      size: 10,
+    }));
 
     if(resp.data?.success){
       if(resp.data.stationTotal > 0 && resp.data.stationList.length > 0) {
@@ -160,25 +167,27 @@ export default class DeyeAPI {
   }
 
   async getStationLatest(dc: DATA_CENTER, token: IDeyeToken, stationId: number): Promise<IDeyeStationLatestData> {
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `https://${this.getDataCenterUrl(dc)}/v1.0/station/latest`,
-      headers: { 
-        'Content-Type': 'application/json', 
-        'Authorization': `Bearer ${token.accessToken}`,
-      },
-      data : JSON.stringify({
-        stationId 
-      })
-    };
-
-    const resp = await axios.request(config);
+    const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/station/latest',{
+      stationId 
+    }));
 
     if(resp.data?.success){
       return resp.data;
     }
 
     throw new Error(`Error loading Station latest data! (${resp})`);
+  }
+
+  async setSolarSell(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, value: SOLAR_SELL): Promise<IDeyeCommissionResponse> {
+    const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/order/sys/solarSell/control',{
+      action: value,
+      deviceSn
+    }));
+
+    if(resp.data?.success){
+      return resp.data;
+    }
+
+    throw new Error(`Error setting Solar Sell proprty to ${value}! (${resp})`);
   }
 }
