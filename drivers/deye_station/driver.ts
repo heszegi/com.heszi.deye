@@ -3,7 +3,7 @@
 import Homey from 'homey';
 import { PairSession } from 'homey/lib/Driver';
 import DeyeApp from '../../app';
-import { DATA_CENTER, IDeyeToken, SOLAR_SELL } from '../../lib/deye_api';
+import { DATA_CENTER, IDeyeToken, SOLAR_SELL, WORK_MODE } from '../../lib/deye_api';
 import DeyeStationDevice from './device';
 
 export default class DeyeStationDriver extends Homey.Driver {
@@ -24,6 +24,11 @@ export default class DeyeStationDriver extends Homey.Driver {
     const solarSellCard = this.homey.flow.getActionCard("set_solar_sell");
     solarSellCard.registerRunListener(async ({device, onoff}:{device:DeyeStationDevice, onoff:SOLAR_SELL}) => {
       device.setSolarSell(onoff).catch(this.error);
+    })
+
+    const workModeCard = this.homey.flow.getActionCard("set_work_mode");
+    workModeCard.registerRunListener(async ({device, workMode}:{device:DeyeStationDevice, workMode:WORK_MODE}) => {
+      device.setWorkMode(workMode).catch(this.error);
     })
   }
 

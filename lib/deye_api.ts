@@ -10,6 +10,13 @@ export enum SOLAR_SELL {
   OFF = 'off'
 }
 
+export enum WORK_MODE { 
+  SELLING_FIRST = 'SELLING_FIRST', 
+  ZERO_EXPORT_TO_LOAD = 'ZERO_EXPORT_TO_LOAD',
+  ZERO_EXPORT_TO_CT = 'ZERO_EXPORT_TO_CT'
+}
+
+
 export enum DATA_CENTER {
   EMEA_APAC = 'EMEA_APAC',
   AMEA = 'AMEA'
@@ -188,6 +195,19 @@ export default class DeyeAPI {
       return resp.data;
     }
 
-    throw new Error(`Error setting Solar Sell proprty to ${value}! (${resp})`);
+    throw new Error(`Error setting Solar Sell property to ${value}! (${resp})`);
+  }
+
+  async setWorkMode(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, value: WORK_MODE): Promise<IDeyeCommissionResponse> {
+    const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/order/sys/workMode/update',{
+      workMode: value,
+      deviceSn
+    }));
+
+    if(resp.data?.success){
+      return resp.data;
+    }
+
+    throw new Error(`Error setting Work Mode property to ${value}! (${resp})`);
   }
 }

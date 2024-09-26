@@ -122,6 +122,29 @@
           ]
         }
       ]
+    },
+    {
+      "id": "set_work_mode",
+      "title": { 
+        "en": "Set Work Mode to..."
+      },
+      "titleFormatted": {
+        "en": "Set Work Mode to [[workMode]]"
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "workMode",
+          "title": {
+            "en": "Work Mode"
+          },
+          "values": [
+            { "id": "SELLING_FIRST", "title": { "en": "Selling First" } },
+            { "id": "ZERO_EXPORT_TO_LOAD", "title": { "en": "Zero Export To Load" } },
+            { "id": "ZERO_EXPORT_TO_CT", "title": { "en": "Zero Export to CT" } }
+          ]
+        }
+      ]
     }
   ]
 }

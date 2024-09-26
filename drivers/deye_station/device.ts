@@ -2,7 +2,7 @@
 
 import Homey from 'homey';
 import DeyeApp from '../../app';
-import { DATA_CENTER, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken, SOLAR_SELL } from '../../lib/deye_api';
+import { DATA_CENTER, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken, SOLAR_SELL, WORK_MODE } from '../../lib/deye_api';
 import DeyeStationDriver from './driver';
 
 export default class DeyeStationDevice extends Homey.Device {
@@ -166,6 +166,10 @@ export default class DeyeStationDevice extends Homey.Device {
 
   async setSolarSell(value: SOLAR_SELL) {
     return this.api.setSolarSell(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
+  }
+
+  async setWorkMode(value: WORK_MODE) {
+    return this.api.setWorkMode(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
   }
 }
 
