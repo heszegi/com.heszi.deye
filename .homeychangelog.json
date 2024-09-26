@@ -19,5 +19,8 @@
   },
   "0.1.6": {
     "en": "Add set Solar Sell action card"
+  },
+  "0.1.7": {
+    "en": "Add set Work Mode action card"
   }
 }
