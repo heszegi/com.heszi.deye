@@ -22,5 +22,8 @@
   },
   "0.1.7": {
     "en": "Add set Work Mode action card"
+  },
+  "0.1.8": {
+    "en": "Add Battery Mode Control action cards (Grid Charge and Gen Charge)"
   }
 }
