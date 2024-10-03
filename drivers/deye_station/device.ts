@@ -2,7 +2,7 @@
 
 import Homey from 'homey';
 import DeyeApp from '../../app';
-import { DATA_CENTER, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken, SOLAR_SELL, WORK_MODE } from '../../lib/deye_api';
+import { BATTERY_MODE_CONTROL, DATA_CENTER, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken, ON_OFF, WORK_MODE } from '../../lib/deye_api';
 import DeyeStationDriver from './driver';
 
 export default class DeyeStationDevice extends Homey.Device {
@@ -164,12 +164,20 @@ export default class DeyeStationDevice extends Homey.Device {
     this.polling = this.homey.setTimeout(this.poll.bind(this), pollDelay);
   }
 
-  async setSolarSell(value: SOLAR_SELL) {
+  async setSolarSell(value: ON_OFF) {
     return this.api.setSolarSell(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
   }
 
   async setWorkMode(value: WORK_MODE) {
     return this.api.setWorkMode(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
+  }
+
+  async setBatteryGridCharge(value: ON_OFF) {
+    return this.api.setBatteryModeControl(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_MODE_CONTROL.GRID_CHARGE, value);
+  }
+  
+  async setBatteryGenCharge(value: ON_OFF) {
+    return this.api.setBatteryModeControl(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_MODE_CONTROL.GEN_CHARGE, value);
   }
 }
 

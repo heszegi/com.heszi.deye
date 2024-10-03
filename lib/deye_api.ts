@@ -5,15 +5,20 @@ import { sha256 } from 'js-sha256';
 
 const Homey = require('homey');
 
-export enum SOLAR_SELL {
+export enum ON_OFF {
   ON = 'on',
   OFF = 'off'
-}
+};
 
 export enum WORK_MODE { 
   SELLING_FIRST = 'SELLING_FIRST', 
   ZERO_EXPORT_TO_LOAD = 'ZERO_EXPORT_TO_LOAD',
   ZERO_EXPORT_TO_CT = 'ZERO_EXPORT_TO_CT'
+}
+
+export enum BATTERY_MODE_CONTROL {
+  GEN_CHARGE = 'GEN_CHARGE',
+  GRID_CHARGE = 'GRID_CHARGE'
 }
 
 
@@ -185,7 +190,7 @@ export default class DeyeAPI {
     throw new Error(`Error loading Station latest data! (${resp})`);
   }
 
-  async setSolarSell(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, value: SOLAR_SELL): Promise<IDeyeCommissionResponse> {
+  async setSolarSell(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, value: ON_OFF): Promise<IDeyeCommissionResponse> {
     const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/order/sys/solarSell/control',{
       action: value,
       deviceSn
@@ -210,4 +215,19 @@ export default class DeyeAPI {
 
     throw new Error(`Error setting Work Mode property to ${value}! (${resp})`);
   }
+
+  async setBatteryModeControl(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, type: BATTERY_MODE_CONTROL, value: ON_OFF): Promise<IDeyeCommissionResponse> {
+    const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/order/battery/modeControl',{
+      action: value,
+      batteryModeType: type,
+      deviceSn
+    }));
+
+    if(resp.data?.success){
+      return resp.data;
+    }
+
+    throw new Error(`Error setting Battery Mode Control property to ${value}! (${resp})`);
+  }
+
 }

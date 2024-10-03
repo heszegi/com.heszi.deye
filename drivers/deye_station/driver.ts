@@ -3,7 +3,7 @@
 import Homey from 'homey';
 import { PairSession } from 'homey/lib/Driver';
 import DeyeApp from '../../app';
-import { DATA_CENTER, IDeyeToken, SOLAR_SELL, WORK_MODE } from '../../lib/deye_api';
+import { DATA_CENTER, IDeyeToken, ON_OFF, WORK_MODE } from '../../lib/deye_api';
 import DeyeStationDevice from './device';
 
 export default class DeyeStationDriver extends Homey.Driver {
@@ -19,17 +19,12 @@ export default class DeyeStationDriver extends Homey.Driver {
     this.registerCapabilityCondition('grid_feeding');
     this.registerCapabilityCondition('solar_production');
 
-    this.stationDataUpdated_card = this.homey.flow.getDeviceTriggerCard("station_data_updated");
+    this.registerCapabiltyAction<ON_OFF>('set_solar_sell', 'setSolarSell', 'onoff');
+    this.registerCapabiltyAction<WORK_MODE>('set_work_mode', 'setWorkMode', 'workMode');
+    this.registerCapabiltyAction<ON_OFF>('set_battery_grid_charge', 'setBatteryGridCharge', 'onoff');
+    this.registerCapabiltyAction<ON_OFF>('set_battery_gen_charge', 'setBatteryGenCharge', 'onoff');
 
-    const solarSellCard = this.homey.flow.getActionCard("set_solar_sell");
-    solarSellCard.registerRunListener(async ({device, onoff}:{device:DeyeStationDevice, onoff:SOLAR_SELL}) => {
-      device.setSolarSell(onoff).catch(this.error);
-    })
-
-    const workModeCard = this.homey.flow.getActionCard("set_work_mode");
-    workModeCard.registerRunListener(async ({device, workMode}:{device:DeyeStationDevice, workMode:WORK_MODE}) => {
-      device.setWorkMode(workMode).catch(this.error);
-    })
+    this.stationDataUpdated_card = this.homey.flow.getDeviceTriggerCard('station_data_updated');
   }
 
   async onPair(session: PairSession) {
@@ -95,9 +90,15 @@ export default class DeyeStationDriver extends Homey.Driver {
   }
 
   registerCapabilityCondition(capability: string) {
-    this.homey.flow.getConditionCard(capability).registerRunListener(async (args:any, state:any) => {
+    this.homey.flow.getConditionCard(capability).registerRunListener(async (args: any, state: any) => {
       return (args.device as DeyeStationDevice).getCapabilityValue(capability);
     });
+  }
+
+  registerCapabiltyAction<T>(capability: string, listener: string, value: string) {
+    this.homey.flow.getActionCard(capability).registerRunListener(async (args: any, state: any) => {
+      args.device[listener](args[value]).catch(this.error);
+    })
   }
 
   triggerStationDataUpdated(device: Homey.FlowCardTriggerDevice.Device, tokens: any, state: any) {

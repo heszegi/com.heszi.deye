@@ -310,6 +310,80 @@
             ]
           }
         ]
+      },
+      {
+        "id": "set_battery_grid_charge",
+        "title": {
+          "en": "Set Battery Grid Charge to..."
+        },
+        "titleFormatted": {
+          "en": "Set Battery Grid Charge to [[onoff]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          },
+          {
+            "type": "dropdown",
+            "name": "onoff",
+            "title": {
+              "en": "On/Off"
+            },
+            "values": [
+              {
+                "id": "on",
+                "title": {
+                  "en": "On"
+                }
+              },
+              {
+                "id": "off",
+                "title": {
+                  "en": "Off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "set_battery_gen_charge",
+        "title": {
+          "en": "Set Battery Gen Charge to..."
+        },
+        "titleFormatted": {
+          "en": "Set Battery Gen Charge to [[onoff]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          },
+          {
+            "type": "dropdown",
+            "name": "onoff",
+            "title": {
+              "en": "On/Off"
+            },
+            "values": [
+              {
+                "id": "on",
+                "title": {
+                  "en": "On"
+                }
+              },
+              {
+                "id": "off",
+                "title": {
+                  "en": "Off"
+                }
+              }
+            ]
+          }
+        ]
       }
     ]
   },
