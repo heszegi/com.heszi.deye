@@ -25,5 +25,8 @@
   },
   "0.1.8": {
     "en": "Add Battery Mode Control action cards (Grid Charge and Gen Charge)"
+  },
+  "0.1.9": {
+    "en": "Fix invalid capability crash error"
   }
 }
