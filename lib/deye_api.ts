@@ -21,7 +21,6 @@ export enum BATTERY_MODE_CONTROL {
   GRID_CHARGE = 'GRID_CHARGE'
 }
 
-
 export enum DATA_CENTER {
   EMEA_APAC = 'EMEA_APAC',
   AMEA = 'AMEA'

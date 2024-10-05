@@ -38,6 +38,8 @@ export default class DeyeStationDevice extends Homey.Device {
     this.normalPollInterval = this.getSetting('normalPollInterval');
     this.minimumPollInterval = this.getSetting('minimumPollInterval');
 
+    await this.migrateCapabilities();
+
     /*
     TODO
     Capability not added because we don't know the device state
@@ -104,6 +106,16 @@ export default class DeyeStationDevice extends Homey.Device {
     this.log('MyDevice has been deleted');
 
     this.homey.clearTimeout(this.polling);
+  }
+
+  async migrateCapabilities() {
+    const remove: string[] = [];
+    for (const cap of remove) if (this.hasCapability(cap)) await this.removeCapability(cap);
+
+    const add = [
+      'inverter_sn'
+    ];
+    for (const cap of add) if (!this.hasCapability(cap)) await this.addCapability(cap);
   }
 
   async poll() {
