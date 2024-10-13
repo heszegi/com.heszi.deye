@@ -147,6 +147,28 @@
       ]
     },
     {
+      "id": "set_energy_pattern",
+      "title": { 
+        "en": "Set Energy Pattern to..."
+      },
+      "titleFormatted": {
+        "en": "Set Energy Pattern to [[energyPattern]]"
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "energyPattern",
+          "title": {
+            "en": "Energy Pattern"
+          },
+          "values": [
+            { "id": "BATTERY_FIRST", "title": { "en": "Battery First" } },
+            { "id": "LOAD_FIRST", "title": { "en": "Load First" } }
+          ]
+        }
+      ]
+    },
+    {
       "id": "set_battery_grid_charge",
       "title": { 
         "en": "Set Battery Grid Charge to..."
@@ -187,6 +209,90 @@
             { "id": "on", "title": { "en": "On" } },
             { "id": "off", "title": { "en": "Off" } }
           ]
+        }
+      ]
+    },
+    {
+      "id": "set_battery_max_discharge_current",
+      "title": { 
+        "en": "Set Battery Max Discharge Current to..."
+      },
+      "titleFormatted": {
+        "en": "Set Battery Max Discharge Current to [[current]]A"
+      },
+      "args": [
+        {
+          "type": "number",
+          "name": "current",
+          "title": {
+            "en": "Current"
+          },
+          "min": 1,
+          "max": 80,
+          "step": 1
+        }
+      ]
+    },
+    {
+      "id": "set_battery_max_charge_current",
+      "title": { 
+        "en": "Set Battery Max Charge Current to..."
+      },
+      "titleFormatted": {
+        "en": "Set Battery Max Charge Current to [[current]]A"
+      },
+      "args": [
+        {
+          "type": "number",
+          "name": "current",
+          "title": {
+            "en": "Current"
+          },
+          "min": 1,
+          "max": 80,
+          "step": 1
+        }
+      ]
+    },
+    {
+      "id": "set_battery_low",
+      "title": { 
+        "en": "Set Battery Low to..."
+      },
+      "titleFormatted": {
+        "en": "Set Battery Low to [[percent]]%"
+      },
+      "args": [
+        {
+          "type": "number",
+          "name": "percent",
+          "title": {
+            "en": "Percent"
+          },
+          "min": 1,
+          "max": 100,
+          "step": 1
+        }
+      ]
+    },
+    {
+      "id": "set_battery_grid_charge_current",
+      "title": { 
+        "en": "Set Battery Grid Charge Current to..."
+      },
+      "titleFormatted": {
+        "en": "Set Battery Grid Charge Current to [[current]]A"
+      },
+      "args": [
+        {
+          "type": "number",
+          "name": "current",
+          "title": {
+            "en": "Current"
+          },
+          "min": 1,
+          "max": 80,
+          "step": 1
         }
       ]
     }

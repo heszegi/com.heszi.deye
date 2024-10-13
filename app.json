@@ -312,6 +312,43 @@
         ]
       },
       {
+        "id": "set_energy_pattern",
+        "title": {
+          "en": "Set Energy Pattern to..."
+        },
+        "titleFormatted": {
+          "en": "Set Energy Pattern to [[energyPattern]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          },
+          {
+            "type": "dropdown",
+            "name": "energyPattern",
+            "title": {
+              "en": "Energy Pattern"
+            },
+            "values": [
+              {
+                "id": "BATTERY_FIRST",
+                "title": {
+                  "en": "Battery First"
+                }
+              },
+              {
+                "id": "LOAD_FIRST",
+                "title": {
+                  "en": "Load First"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
         "id": "set_battery_grid_charge",
         "title": {
           "en": "Set Battery Grid Charge to..."
@@ -382,6 +419,110 @@
                 }
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "set_battery_max_discharge_current",
+        "title": {
+          "en": "Set Battery Max Discharge Current to..."
+        },
+        "titleFormatted": {
+          "en": "Set Battery Max Discharge Current to [[current]]A"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          },
+          {
+            "type": "number",
+            "name": "current",
+            "title": {
+              "en": "Current"
+            },
+            "min": 1,
+            "max": 80,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "set_battery_max_charge_current",
+        "title": {
+          "en": "Set Battery Max Charge Current to..."
+        },
+        "titleFormatted": {
+          "en": "Set Battery Max Charge Current to [[current]]A"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          },
+          {
+            "type": "number",
+            "name": "current",
+            "title": {
+              "en": "Current"
+            },
+            "min": 1,
+            "max": 80,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "set_battery_low",
+        "title": {
+          "en": "Set Battery Low to..."
+        },
+        "titleFormatted": {
+          "en": "Set Battery Low to [[percent]]%"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          },
+          {
+            "type": "number",
+            "name": "percent",
+            "title": {
+              "en": "Percent"
+            },
+            "min": 1,
+            "max": 100,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "set_battery_grid_charge_current",
+        "title": {
+          "en": "Set Battery Grid Charge Current to..."
+        },
+        "titleFormatted": {
+          "en": "Set Battery Grid Charge Current to [[current]]A"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          },
+          {
+            "type": "number",
+            "name": "current",
+            "title": {
+              "en": "Current"
+            },
+            "min": 1,
+            "max": 80,
+            "step": 1
           }
         ]
       }
@@ -497,10 +638,10 @@
             "en": "Normal Polling Interval (seconds)"
           },
           "value": 390,
-          "min": 300,
+          "min": 90,
           "max": 3600,
           "hint": {
-            "en": "The interval while station data updated in the cloud. Default: 390"
+            "en": "The interval while station data updated in the cloud. Check your inverter logger settings! Default: 390"
           }
         },
         {

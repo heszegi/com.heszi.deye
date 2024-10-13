@@ -3,7 +3,7 @@
 import Homey from 'homey';
 import { PairSession } from 'homey/lib/Driver';
 import DeyeApp from '../../app';
-import { DATA_CENTER, IDeyeToken, ON_OFF, WORK_MODE } from '../../lib/deye_api';
+import { DATA_CENTER, ENERGY_PATTERN, IDeyeToken, ON_OFF, WORK_MODE } from '../../lib/deye_api';
 import DeyeStationDevice from './device';
 
 export default class DeyeStationDriver extends Homey.Driver {
@@ -21,8 +21,14 @@ export default class DeyeStationDriver extends Homey.Driver {
 
     this.registerCapabiltyAction<ON_OFF>('set_solar_sell', 'setSolarSell', 'onoff');
     this.registerCapabiltyAction<WORK_MODE>('set_work_mode', 'setWorkMode', 'workMode');
+    this.registerCapabiltyAction<ENERGY_PATTERN>('set_energy_pattern', 'setEnergyPattern', 'energyPattern');
+
     this.registerCapabiltyAction<ON_OFF>('set_battery_grid_charge', 'setBatteryGridCharge', 'onoff');
     this.registerCapabiltyAction<ON_OFF>('set_battery_gen_charge', 'setBatteryGenCharge', 'onoff');
+    this.registerCapabiltyAction<number>('set_battery_max_discharge_current', 'setBatteryMaxDischargeCurrent', 'current');
+    this.registerCapabiltyAction<number>('set_battery_max_charge_current', 'setBatteryMaxChargeCurrent', 'current');
+    this.registerCapabiltyAction<number>('set_battery_low', 'setBatteryLow', 'percent');
+    this.registerCapabiltyAction<number>('set_battery_grid_charge_current', 'setBatteryGridChargeCurrent', 'current');
 
     this.stationDataUpdated_card = this.homey.flow.getDeviceTriggerCard('station_data_updated');
   }

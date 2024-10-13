@@ -2,7 +2,7 @@
 
 import Homey from 'homey';
 import DeyeApp from '../../app';
-import { BATTERY_MODE_CONTROL, DATA_CENTER, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken, ON_OFF, WORK_MODE } from '../../lib/deye_api';
+import { BATTERY_MODE_CONTROL, BATTERY_PARAMETER, DATA_CENTER, ENERGY_PATTERN, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken, ON_OFF, WORK_MODE } from '../../lib/deye_api';
 import DeyeStationDriver from './driver';
 
 export default class DeyeStationDevice extends Homey.Device {
@@ -131,7 +131,7 @@ export default class DeyeStationDevice extends Homey.Device {
     } catch (err) {
       this.log('Get sattion latest:', err);
 
-      if(++this.apiError < 10) {
+      if(++this.apiError < 61) {
         const pollDelay = this.minimumPollInterval * 1000 * this.apiError;
         this.polling = this.homey.setTimeout(this.poll.bind(this), pollDelay);
       } else {
@@ -176,13 +176,25 @@ export default class DeyeStationDevice extends Homey.Device {
     this.polling = this.homey.setTimeout(this.poll.bind(this), pollDelay);
   }
 
+  // Solar Sell
+
   async setSolarSell(value: ON_OFF) {
     return this.api.setSolarSell(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
   }
 
+  // Work Mode
+
   async setWorkMode(value: WORK_MODE) {
     return this.api.setWorkMode(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
   }
+
+  // Energy Pattern
+
+  async setEnergyPattern(value: ENERGY_PATTERN) {
+    return this.api.setEnergyPattern(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
+  }
+
+  // Battery Mode Controls
 
   async setBatteryGridCharge(value: ON_OFF) {
     return this.api.setBatteryModeControl(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_MODE_CONTROL.GRID_CHARGE, value);
@@ -190,6 +202,24 @@ export default class DeyeStationDevice extends Homey.Device {
   
   async setBatteryGenCharge(value: ON_OFF) {
     return this.api.setBatteryModeControl(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_MODE_CONTROL.GEN_CHARGE, value);
+  }
+
+  // Battery Paramters
+
+  async setBatteryMaxDischargeCurrent(value: number) {
+    return this.api.setBatteryParamater(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_PARAMETER.MAX_DISCHARGE_CURRENT, value);
+  }
+
+  async setBatteryMaxChargeCurrent(value: number) {
+    return this.api.setBatteryParamater(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_PARAMETER.MAX_CHARGE_CURRENT, value);
+  }
+
+  async setBatteryLow(value: number) {
+    return this.api.setBatteryParamater(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_PARAMETER.BATT_LOW, value);
+  }
+
+  async setBatteryGridChargeCurrent(value: number) {
+    return this.api.setBatteryParamater(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_PARAMETER.GRID_CHARGE_AMPERE, value);
   }
 }
 

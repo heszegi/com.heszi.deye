@@ -16,9 +16,21 @@ export enum WORK_MODE {
   ZERO_EXPORT_TO_CT = 'ZERO_EXPORT_TO_CT'
 }
 
+export enum ENERGY_PATTERN {
+  BATTERY_FIRST = 'BATTERY_FIRST', 
+  LOAD_FIRST = 'LOAD_FIRST'
+}
+
 export enum BATTERY_MODE_CONTROL {
   GEN_CHARGE = 'GEN_CHARGE',
   GRID_CHARGE = 'GRID_CHARGE'
+}
+
+export enum BATTERY_PARAMETER {
+  MAX_CHARGE_CURRENT = 'MAX_CHARGE_CURRENT',
+  MAX_DISCHARGE_CURRENT = 'MAX_DISCHARGE_CURRENT',
+  GRID_CHARGE_AMPERE = 'GRID_CHARGE_AMPERE',
+  BATT_LOW = 'BATT_LOW'
 }
 
 export enum DATA_CENTER {
@@ -215,6 +227,19 @@ export default class DeyeAPI {
     throw new Error(`Error setting Work Mode property to ${value}! (${resp})`);
   }
 
+  async setEnergyPattern(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, value: ENERGY_PATTERN): Promise<IDeyeCommissionResponse> {
+    const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/order/sys/energyPattern/update',{
+      energyPattern: value,
+      deviceSn
+    }));
+
+    if(resp.data?.success){
+      return resp.data;
+    }
+
+    throw new Error(`Error setting Energy Pattern property to ${value}! (${resp})`);
+  }
+
   async setBatteryModeControl(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, type: BATTERY_MODE_CONTROL, value: ON_OFF): Promise<IDeyeCommissionResponse> {
     const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/order/battery/modeControl',{
       action: value,
@@ -226,7 +251,20 @@ export default class DeyeAPI {
       return resp.data;
     }
 
-    throw new Error(`Error setting Battery Mode Control property to ${value}! (${resp})`);
+    throw new Error(`Error setting Battery Mode Control property ${type} to ${value}! (${resp})`);
   }
 
+  async setBatteryParamater(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, type: BATTERY_PARAMETER, value: number): Promise<IDeyeCommissionResponse> {
+    const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/order/battery/parameter/update',{
+      paramterType: type,
+      value: value,
+      deviceSn
+    }));
+
+    if(resp.data?.success){
+      return resp.data;
+    }
+
+    throw new Error(`Error setting Battery Parameter property ${type} to ${value}! (${resp})`);
+  }
 }
