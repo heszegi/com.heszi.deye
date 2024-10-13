@@ -28,5 +28,8 @@
   },
   "0.1.9": {
     "en": "Fix invalid capability crash error"
+  },
+  "1.0.0": {
+    "en": "Add Energy Pattern and Battery Parameters action flow cards"
   }
 }
