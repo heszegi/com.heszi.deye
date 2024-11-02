@@ -5,6 +5,12 @@ import { sha256 } from 'js-sha256';
 
 const Homey = require('homey');
 
+export enum DEVICE_STATE {
+  ONLINE = 1,
+  ALERT = 2, 
+  OFFLINE = 3
+}
+
 export enum ON_OFF {
   ON = 'on',
   OFF = 'off'
@@ -39,9 +45,9 @@ export enum DATA_CENTER {
 }
 
 export interface IDeyeToken {
-  accessToken:string;
-  refreshToken:string; 
-  expiresIn:number;
+  accessToken: string;
+  refreshToken: string; 
+  expiresIn: number;
 }
 
 interface IDeyeStationBase {
@@ -89,6 +95,21 @@ export interface IDeyeStationLatestData {
     batterySOC: number;
     irradiateIntensity: number;
     lastUpdateTime: number;
+}
+
+
+export interface IDeyeDeviceLatestKeyValue<T> {
+  key: string | null;
+  value: T;
+  unit: string;
+}
+
+export interface IDeyeDeviceLatestData {
+  deviceSn: string;
+  deviceType: string;
+  deviceState: DEVICE_STATE;
+  collectionTime: number;
+  dataList: IDeyeDeviceLatestKeyValue<string>[];
 }
 
 export interface IDeyeCommissionResponse {
@@ -199,6 +220,18 @@ export default class DeyeAPI {
     }
 
     throw new Error(`Error loading Station latest data! (${resp})`);
+  }
+
+  async getDeviceLatest(dc: DATA_CENTER, token: IDeyeToken, deviceSN: string): Promise<IDeyeDeviceLatestData> {
+    const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/device/latest',{
+      deviceList: [deviceSN]
+    }));
+
+    if(resp.data?.success && resp.data?.deviceDataList?.length){
+      return resp.data.deviceDataList[0];
+    }
+
+    throw new Error(`Error loading Device latest data! (${resp})`);
   }
 
   async setSolarSell(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, value: ON_OFF): Promise<IDeyeCommissionResponse> {

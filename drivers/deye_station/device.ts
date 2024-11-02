@@ -2,7 +2,7 @@
 
 import Homey from 'homey';
 import DeyeApp from '../../app';
-import { BATTERY_MODE_CONTROL, BATTERY_PARAMETER, DATA_CENTER, ENERGY_PATTERN, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken, ON_OFF, WORK_MODE } from '../../lib/deye_api';
+import { BATTERY_MODE_CONTROL, BATTERY_PARAMETER, DATA_CENTER, ENERGY_PATTERN, IDeyeDeviceLatestData, IDeyeDeviceLatestKeyValue, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken, ON_OFF, WORK_MODE } from '../../lib/deye_api';
 import DeyeStationDriver from './driver';
 
 export default class DeyeStationDevice extends Homey.Device {
@@ -15,7 +15,8 @@ export default class DeyeStationDevice extends Homey.Device {
   station!: IDeyeStationWithDevice;
   normalPollInterval!: number;
   minimumPollInterval!: number;
-  last!: IDeyeStationLatestData;
+  lastStationData!: IDeyeStationLatestData;
+  lastDeviceData!: IDeyeDeviceLatestData;
   polling?: NodeJS.Timeout;
 
   validateNumberValues = (value: any): number => {
@@ -24,6 +25,11 @@ export default class DeyeStationDevice extends Homey.Device {
 
   validateStringValues = (value: any): string => {
     return value.toString() === value ? value : 'Invalid value!';
+  }
+
+  getLatestKeyValue = (data:IDeyeDeviceLatestData, key: string): IDeyeDeviceLatestKeyValue<number> => {
+    const keyValue = data.dataList.find(item => item.key === key) || {key: key, value: '', unit: ''};
+    return {...keyValue, value: parseFloat(keyValue.value)};
   }
 
   /**
@@ -58,7 +64,8 @@ export default class DeyeStationDevice extends Homey.Device {
       this.setCapabilityValue('inverter_sn', 'No device found!');
     }
 
-    this.poll();
+    //this.pollStationLatest();
+    this.pollDeviceLatest();
   }
 
   /**
@@ -118,7 +125,8 @@ export default class DeyeStationDevice extends Homey.Device {
     for (const cap of add) if (!this.hasCapability(cap)) await this.addCapability(cap);
   }
 
-  async poll() {
+  // old data source, changed to pollDeviceLatest
+  async pollStationLatest() {
     this.homey.clearTimeout(this.polling);
     
     let latest: IDeyeStationLatestData;
@@ -133,7 +141,7 @@ export default class DeyeStationDevice extends Homey.Device {
 
       if(++this.apiError < 61) {
         const pollDelay = this.minimumPollInterval * 1000 * this.apiError;
-        this.polling = this.homey.setTimeout(this.poll.bind(this), pollDelay);
+        this.polling = this.homey.setTimeout(this.pollStationLatest.bind(this), pollDelay);
       } else {
         this.log('Reached max number of API call tries!');
       }
@@ -142,7 +150,7 @@ export default class DeyeStationDevice extends Homey.Device {
       return;
     }
 
-    if(!this.last || this.last.lastUpdateTime < latest.lastUpdateTime){
+    if(!this.lastStationData || this.lastStationData.lastUpdateTime < latest.lastUpdateTime){
       const solar_production = latest.generationPower > 0;
       this.setCapabilityValue('solar_production', solar_production);
 
@@ -168,13 +176,74 @@ export default class DeyeStationDevice extends Homey.Device {
 
       this.driver.triggerStationDataUpdated(this,dataTokens,{});
 
-      this.last = latest;
+      this.lastStationData = latest;
     }
 
     const tillNext = (latest.lastUpdateTime + this.normalPollInterval) - Math.floor(Date.now() / 1000);
     const pollDelay = (tillNext <= 0 ? this.minimumPollInterval : tillNext) * 1000;
-    this.polling = this.homey.setTimeout(this.poll.bind(this), pollDelay);
+    this.polling = this.homey.setTimeout(this.pollStationLatest.bind(this), pollDelay);
   }
+
+  async pollDeviceLatest() {
+    this.homey.clearTimeout(this.polling);
+    
+    let latest: IDeyeDeviceLatestData;
+  
+    try {
+      latest = await this.api.getDeviceLatest(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn);
+      
+      this.apiError = 0;
+      this.setAvailable();
+    } catch (err) {
+      this.log('Get device latest:', err);
+  
+      if (++this.apiError < 61) {
+        const pollDelay = this.minimumPollInterval * 1000 * this.apiError;
+        this.polling = this.homey.setTimeout(this.pollDeviceLatest.bind(this), pollDelay);
+      } else {
+        this.log('Reached max number of API call tries!');
+      }
+      
+      this.setUnavailable();
+      return;
+    }
+  
+    const lastUpdateTime = latest.collectionTime;
+    if (!this.lastDeviceData || this.lastDeviceData.collectionTime < lastUpdateTime) {
+  
+      const dataTokens = {
+        measure_battery: this.getLatestKeyValue(latest, "SOC").value,
+        measure_battery_power: this.getLatestKeyValue(latest, "BatteryPower").value,
+        measure_consumption_power: this.getLatestKeyValue(latest, "TotalConsumptionPower").value,
+        measure_grid_power: this.getLatestKeyValue(latest, "TotalGridPower").value,
+        measure_solar_power: this.getLatestKeyValue(latest, "TotalSolarPower").value
+      }
+      
+      const solar_production = dataTokens.measure_solar_power > 0;
+      this.setCapabilityValue('solar_production', solar_production);
+  
+      const battery_charging = dataTokens.measure_battery_power < 0 && dataTokens.measure_battery < 99;
+      this.setCapabilityValue('battery_charging', battery_charging);
+  
+      const grid_feeding = dataTokens.measure_grid_power < 0;
+      this.setCapabilityValue('grid_feeding', grid_feeding);
+  
+      this.setCapabilityValue('measure_battery', dataTokens.measure_battery);
+      this.setCapabilityValue('measure_battery_power', dataTokens.measure_battery_power);
+      this.setCapabilityValue('measure_consumption_power', dataTokens.measure_consumption_power);
+      this.setCapabilityValue('measure_grid_power', dataTokens.measure_grid_power);
+      this.setCapabilityValue('measure_solar_power', dataTokens.measure_solar_power);
+  
+      this.driver.triggerStationDataUpdated(this, dataTokens, {});
+  
+      this.lastDeviceData = latest;
+    }
+  
+    const tillNext = (lastUpdateTime + this.normalPollInterval) - Math.floor(Date.now() / 1000);
+    const pollDelay = (tillNext <= 0 ? this.minimumPollInterval : tillNext) * 1000;
+    this.polling = this.homey.setTimeout(this.pollDeviceLatest.bind(this), pollDelay);
+  }
+  
 
   // Solar Sell
 
