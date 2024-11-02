@@ -34,6 +34,30 @@
           "title": { "en": "Power from solar cells" },
           "type": "number",
           "example": 1000
+        },
+        {
+          "name": "daily_production",
+          "title": { "en": "Daily production" },
+          "type": "number",
+          "example": 11.3
+        },
+        {
+          "name": "daily_consumption",
+          "title": { "en": "Daily consumption" },
+          "type": "number",
+          "example": 12.7
+        },
+        {
+          "name": "daily_sell",
+          "title": { "en": "Daily energy sell" },
+          "type": "number",
+          "example": 1.2
+        },
+        {
+          "name": "daily_buy",
+          "title": { "en": "Daily energy buy" },
+          "type": "number",
+          "example": 0
         }
       ]
     },

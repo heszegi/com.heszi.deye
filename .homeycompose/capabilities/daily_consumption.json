@@ -1,0 +1,19 @@
+{
+    "type": "number",
+    "title": {
+      "en": "Daily consumption"
+    },
+    "decimals": 2,
+    "units": {
+      "en": "kWh"
+    },
+    "desc": {
+      "en": "Daily consumption in kWh is the total amount of electricity used by your home for the day."
+    },
+    "chartType": "spline",
+    "insights": true,
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "icon": "/drivers/deye_station/assets/daily_consumption.svg"
+  }

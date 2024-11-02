@@ -1,0 +1,19 @@
+{
+    "type": "number",
+    "title": {
+      "en": "Daily energy sell"
+    },
+    "decimals": 2,
+    "units": {
+      "en": "kWh"
+    },
+    "desc": {
+      "en": "Daily energy sell in kWh is the amount of excess electricity sent to the grid each day."
+    },
+    "chartType": "spline",
+    "insights": true,
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "icon": "/drivers/deye_station/assets/daily_sell.svg"
+  }

@@ -27,7 +27,7 @@ export default class DeyeStationDevice extends Homey.Device {
     return value.toString() === value ? value : 'Invalid value!';
   }
 
-  getLatestKeyValue = (data:IDeyeDeviceLatestData, key: string): IDeyeDeviceLatestKeyValue<number> => {
+  getDeviceLatestKeyValue = (data:IDeyeDeviceLatestData, key: string): IDeyeDeviceLatestKeyValue<number> => {
     const keyValue = data.dataList.find(item => item.key === key) || {key: key, value: '', unit: ''};
     return {...keyValue, value: parseFloat(keyValue.value)};
   }
@@ -120,7 +120,11 @@ export default class DeyeStationDevice extends Homey.Device {
     for (const cap of remove) if (this.hasCapability(cap)) await this.removeCapability(cap);
 
     const add = [
-      'inverter_sn'
+      'inverter_sn',
+      'daily_production',
+      'daily_consumption',
+      'daily_buy',
+      'daily_sell'
     ];
     for (const cap of add) if (!this.hasCapability(cap)) await this.addCapability(cap);
   }
@@ -212,12 +216,18 @@ export default class DeyeStationDevice extends Homey.Device {
     if (!this.lastDeviceData || this.lastDeviceData.collectionTime < lastUpdateTime) {
   
       const dataTokens = {
-        measure_battery: this.getLatestKeyValue(latest, "SOC").value,
-        measure_battery_power: this.getLatestKeyValue(latest, "BatteryPower").value,
-        measure_consumption_power: this.getLatestKeyValue(latest, "TotalConsumptionPower").value,
-        measure_grid_power: this.getLatestKeyValue(latest, "TotalGridPower").value,
-        measure_solar_power: this.getLatestKeyValue(latest, "TotalSolarPower").value
+        measure_battery: this.getDeviceLatestKeyValue(latest, "SOC").value,
+        measure_battery_power: this.getDeviceLatestKeyValue(latest, "BatteryPower").value,
+        measure_consumption_power: this.getDeviceLatestKeyValue(latest, "TotalConsumptionPower").value,
+        measure_grid_power: this.getDeviceLatestKeyValue(latest, "TotalGridPower").value,
+        measure_solar_power: this.getDeviceLatestKeyValue(latest, "TotalSolarPower").value,
+        daily_production: this.getDeviceLatestKeyValue(latest, "DailyActiveProduction").value,
+        daily_consumption: this.getDeviceLatestKeyValue(latest, "DailyConsumption").value,
+        daily_sell: this.getDeviceLatestKeyValue(latest, "DailyEnergySell").value,
+        daily_buy: this.getDeviceLatestKeyValue(latest, "DailyEnergyBuy").value
       }
+
+      Object.entries(dataTokens).forEach( cap => this.setCapabilityValue(cap[0], cap[1]));
       
       const solar_production = dataTokens.measure_solar_power > 0;
       this.setCapabilityValue('solar_production', solar_production);
@@ -227,12 +237,6 @@ export default class DeyeStationDevice extends Homey.Device {
   
       const grid_feeding = dataTokens.measure_grid_power < 0;
       this.setCapabilityValue('grid_feeding', grid_feeding);
-  
-      this.setCapabilityValue('measure_battery', dataTokens.measure_battery);
-      this.setCapabilityValue('measure_battery_power', dataTokens.measure_battery_power);
-      this.setCapabilityValue('measure_consumption_power', dataTokens.measure_consumption_power);
-      this.setCapabilityValue('measure_grid_power', dataTokens.measure_grid_power);
-      this.setCapabilityValue('measure_solar_power', dataTokens.measure_solar_power);
   
       this.driver.triggerStationDataUpdated(this, dataTokens, {});
   

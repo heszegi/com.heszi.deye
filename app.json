@@ -86,6 +86,38 @@
             },
             "type": "number",
             "example": 1000
+          },
+          {
+            "name": "daily_production",
+            "title": {
+              "en": "Daily production"
+            },
+            "type": "number",
+            "example": 11.3
+          },
+          {
+            "name": "daily_consumption",
+            "title": {
+              "en": "Daily consumption"
+            },
+            "type": "number",
+            "example": 12.7
+          },
+          {
+            "name": "daily_sell",
+            "title": {
+              "en": "Daily energy sell"
+            },
+            "type": "number",
+            "example": 1.2
+          },
+          {
+            "name": "daily_buy",
+            "title": {
+              "en": "Daily energy buy"
+            },
+            "type": "number",
+            "example": 0
           }
         ],
         "args": [
@@ -543,9 +575,13 @@
         "measure_battery_power",
         "measure_consumption_power",
         "measure_grid_power",
+        "daily_production",
+        "daily_consumption",
+        "daily_sell",
+        "daily_buy",
         "inverter_sn",
-        "address",
-        "owner"
+        "owner",
+        "address"
       ],
       "energy": {
         "batteries": [
@@ -685,6 +721,82 @@
       "uiComponent": "sensor",
       "icon": "/drivers/deye_station/assets/battery_charging.svg"
     },
+    "daily_buy": {
+      "type": "number",
+      "title": {
+        "en": "Daily energy buy"
+      },
+      "decimals": 2,
+      "units": {
+        "en": "kWh"
+      },
+      "desc": {
+        "en": "Daily energy buy in kWh of the amount of electricity purchased from the grid each day to meet energy needs."
+      },
+      "chartType": "spline",
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/daily_buy.svg"
+    },
+    "daily_consumption": {
+      "type": "number",
+      "title": {
+        "en": "Daily consumption"
+      },
+      "decimals": 2,
+      "units": {
+        "en": "kWh"
+      },
+      "desc": {
+        "en": "Daily consumption in kWh is the total amount of electricity used by your home for the day."
+      },
+      "chartType": "spline",
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/daily_consumption.svg"
+    },
+    "daily_production": {
+      "type": "number",
+      "title": {
+        "en": "Daily production"
+      },
+      "decimals": 2,
+      "units": {
+        "en": "kWh"
+      },
+      "desc": {
+        "en": "Daily production in kWh of a solar system indicates the total electricity generated each day."
+      },
+      "chartType": "spline",
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/daily_production.svg"
+    },
+    "daily_sell": {
+      "type": "number",
+      "title": {
+        "en": "Daily energy sell"
+      },
+      "decimals": 2,
+      "units": {
+        "en": "kWh"
+      },
+      "desc": {
+        "en": "Daily energy sell in kWh is the amount of excess electricity sent to the grid each day."
+      },
+      "chartType": "spline",
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/daily_sell.svg"
+    },
     "grid_feeding": {
       "type": "boolean",
       "title": {
@@ -702,7 +814,7 @@
     "inverter_sn": {
       "type": "string",
       "title": {
-        "en": "Inverter Serial Number"
+        "en": "Inverter serial number"
       },
       "getable": true,
       "setable": false,

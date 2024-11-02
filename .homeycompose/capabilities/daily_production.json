@@ -1,0 +1,19 @@
+{
+    "type": "number",
+    "title": {
+      "en": "Daily production"
+    },
+    "decimals": 2,
+    "units": {
+      "en": "kWh"
+    },
+    "desc": {
+      "en": "Daily production in kWh of a solar system indicates the total electricity generated each day."
+    },
+    "chartType": "spline",
+    "insights": true,
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "icon": "/drivers/deye_station/assets/daily_production.svg"
+  }

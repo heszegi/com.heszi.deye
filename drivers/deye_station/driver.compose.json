@@ -12,9 +12,13 @@
     "measure_battery_power",
     "measure_consumption_power",
     "measure_grid_power",
+    "daily_production",
+    "daily_consumption",
+    "daily_sell",
+    "daily_buy",
     "inverter_sn",
-    "address",
-    "owner"
+    "owner",
+    "address"
   ],
   "energy": {
     "batteries": ["OTHER"]

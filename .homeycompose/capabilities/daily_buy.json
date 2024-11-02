@@ -1,0 +1,19 @@
+{
+    "type": "number",
+    "title": {
+      "en": "Daily energy buy"
+    },
+    "decimals": 2,
+    "units": {
+      "en": "kWh"
+    },
+    "desc": {
+      "en": "Daily energy buy in kWh of the amount of electricity purchased from the grid each day to meet energy needs."
+    },
+    "chartType": "spline",
+    "insights": true,
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "icon": "/drivers/deye_station/assets/daily_buy.svg"
+  }

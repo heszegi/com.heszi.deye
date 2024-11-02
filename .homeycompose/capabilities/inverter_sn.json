@@ -1,7 +1,7 @@
 {
   "type": "string",
   "title": {
-    "en": "Inverter Serial Number"
+    "en": "Inverter serial number"
   },
   "getable": true,
   "setable": false,

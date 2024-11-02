@@ -97,7 +97,6 @@ export interface IDeyeStationLatestData {
     lastUpdateTime: number;
 }
 
-
 export interface IDeyeDeviceLatestKeyValue<T> {
   key: string | null;
   value: T;
