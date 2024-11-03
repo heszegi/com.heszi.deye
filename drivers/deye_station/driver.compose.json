@@ -5,6 +5,7 @@
   "class": "solarpanel",
   "capabilities": [
     "measure_battery",
+    "grid_available",
     "grid_feeding",
     "battery_charging",
     "solar_production",

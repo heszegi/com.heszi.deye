@@ -15,6 +15,7 @@ export default class DeyeStationDriver extends Homey.Driver {
   async onInit() {
     this.log('MyDriver has been initialized');
 
+    this.registerCapabilityCondition('grid_available');
     this.registerCapabilityCondition('battery_charging');
     this.registerCapabilityCondition('grid_feeding');
     this.registerCapabilityCondition('solar_production');

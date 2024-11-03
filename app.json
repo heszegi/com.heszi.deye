@@ -129,6 +129,32 @@
         ]
       },
       {
+        "id": "grid_available_true",
+        "title": {
+          "en": "Grid available"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          }
+        ]
+      },
+      {
+        "id": "grid_available_false",
+        "title": {
+          "en": "Grid unavailable"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          }
+        ]
+      },
+      {
         "id": "measure_battery_power_changed",
         "title": {
           "en": "Power from the battery changed"
@@ -222,6 +248,19 @@
       }
     ],
     "conditions": [
+      {
+        "id": "grid_available",
+        "title": {
+          "en": "Grid !{{available|unavailable}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          }
+        ]
+      },
       {
         "id": "battery_charging",
         "title": {
@@ -568,6 +607,7 @@
       "class": "solarpanel",
       "capabilities": [
         "measure_battery",
+        "grid_available",
         "grid_feeding",
         "battery_charging",
         "solar_production",
@@ -796,6 +836,20 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/drivers/deye_station/assets/daily_sell.svg"
+    },
+    "grid_available": {
+      "type": "boolean",
+      "title": {
+        "en": "Grid available"
+      },
+      "desc": {
+        "en": "True when grid is available."
+      },
+      "insights": false,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/grid_available.svg"
     },
     "grid_feeding": {
       "type": "boolean",

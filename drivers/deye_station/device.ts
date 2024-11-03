@@ -64,7 +64,6 @@ export default class DeyeStationDevice extends Homey.Device {
       this.setCapabilityValue('inverter_sn', 'No device found!');
     }
 
-    //this.pollStationLatest();
     this.pollDeviceLatest();
   }
 
@@ -121,71 +120,14 @@ export default class DeyeStationDevice extends Homey.Device {
 
     const add = [
       'inverter_sn',
-      'daily_production',
+      //---------------- from v1.0.0 -------------------
+      'daily_production', 
       'daily_consumption',
       'daily_buy',
-      'daily_sell'
+      'daily_sell',
+      'grid_available'
     ];
     for (const cap of add) if (!this.hasCapability(cap)) await this.addCapability(cap);
-  }
-
-  // old data source, changed to pollDeviceLatest
-  async pollStationLatest() {
-    this.homey.clearTimeout(this.polling);
-    
-    let latest: IDeyeStationLatestData;
-
-    try {
-      latest = await this.api.getStationLatest(this.dataCenter, this.token, this.station.id);
-
-      this.apiError = 0
-      this.setAvailable();
-    } catch (err) {
-      this.log('Get sattion latest:', err);
-
-      if(++this.apiError < 61) {
-        const pollDelay = this.minimumPollInterval * 1000 * this.apiError;
-        this.polling = this.homey.setTimeout(this.pollStationLatest.bind(this), pollDelay);
-      } else {
-        this.log('Reached max number of API call tries!');
-      }
-      
-      this.setUnavailable();
-      return;
-    }
-
-    if(!this.lastStationData || this.lastStationData.lastUpdateTime < latest.lastUpdateTime){
-      const solar_production = latest.generationPower > 0;
-      this.setCapabilityValue('solar_production', solar_production);
-
-      const battery_charging = latest.chargePower < 0 && latest.batterySOC < 99;
-      this.setCapabilityValue('battery_charging', battery_charging);
-
-      const grid_feeding = latest.wirePower < 0;
-      this.setCapabilityValue('grid_feeding', grid_feeding);
-
-      const dataTokens = {
-        measure_battery: this.validateNumberValues(latest.batterySOC),
-        measure_battery_power: this.validateNumberValues(latest.batteryPower),
-        measure_consumption_power: this.validateNumberValues(latest.consumptionPower),
-        measure_grid_power: this.validateNumberValues(latest.wirePower),
-        measure_solar_power: this.validateNumberValues(latest.generationPower)
-      }
-
-      this.setCapabilityValue('measure_battery', dataTokens.measure_battery);
-      this.setCapabilityValue('measure_battery_power', dataTokens.measure_battery_power);
-      this.setCapabilityValue('measure_consumption_power', dataTokens.measure_consumption_power);
-      this.setCapabilityValue('measure_grid_power', dataTokens.measure_grid_power);
-      this.setCapabilityValue('measure_solar_power', dataTokens.measure_solar_power);
-
-      this.driver.triggerStationDataUpdated(this,dataTokens,{});
-
-      this.lastStationData = latest;
-    }
-
-    const tillNext = (latest.lastUpdateTime + this.normalPollInterval) - Math.floor(Date.now() / 1000);
-    const pollDelay = (tillNext <= 0 ? this.minimumPollInterval : tillNext) * 1000;
-    this.polling = this.homey.setTimeout(this.pollStationLatest.bind(this), pollDelay);
   }
 
   async pollDeviceLatest() {
@@ -227,7 +169,10 @@ export default class DeyeStationDevice extends Homey.Device {
         daily_buy: this.getDeviceLatestKeyValue(latest, "DailyEnergyBuy").value
       }
 
-      Object.entries(dataTokens).forEach( cap => this.setCapabilityValue(cap[0], cap[1]));
+      Object.entries(dataTokens).forEach(capability => this.setCapabilityValue(capability[0], capability[1]));
+
+      const grid_available = this.getDeviceLatestKeyValue(latest, "GridFrequency").value > 0;
+      this.setCapabilityValue('grid_available', grid_available);
       
       const solar_production = dataTokens.measure_solar_power > 0;
       this.setCapabilityValue('solar_production', solar_production);

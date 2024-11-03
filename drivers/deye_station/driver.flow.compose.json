@@ -62,6 +62,14 @@
       ]
     },
     {
+      "id": "grid_available_true",
+      "title": { "en": "Grid available" }
+    },
+    {
+      "id": "grid_available_false",
+      "title": { "en": "Grid unavailable" }
+    },
+    {
       "id": "measure_battery_power_changed",
       "title": { "en": "Power from the battery changed" },
       "tokens": [
@@ -111,6 +119,10 @@
     }
   ],
   "conditions": [
+    {
+      "id": "grid_available",
+      "title": { "en": "Grid !{{available|unavailable}}" }
+    },
     {
       "id": "battery_charging",
       "title": { "en": "!{{Battery|Battery not}} charging"}
