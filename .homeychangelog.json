@@ -31,5 +31,8 @@
   },
   "1.0.0": {
     "en": "Add Energy Pattern and Battery Parameters action flow cards"
+  },
+  "1.1.0": {
+    "en": "Added 4 daily energy metrics, and change data source"
   }
 }
