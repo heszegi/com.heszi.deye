@@ -663,6 +663,9 @@
               "en": "Password"
             }
           }
+        },
+        {
+          "id": "update"
         }
       ],
       "id": "deye_station",

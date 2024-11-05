@@ -45,7 +45,6 @@ export default class DeyeStationDriver extends Homey.Driver {
     session.setHandler('login', async (data: {username: string, password: string}) => {
       try{
         token = await (this.homey.app as DeyeApp).api.login(dataCenter, data.username, data.password);
-
         return true;
       }catch(err){
         this.log('Pair login:', err);
@@ -78,17 +77,42 @@ export default class DeyeStationDriver extends Homey.Driver {
   }
 
   public async onRepair(session: PairSession, device: DeyeStationDevice): Promise<void> {
-    session.setHandler('login', async (data: {username: string, password: string}) => {
-      const settings = device.getSettings();
 
-      try{
+    session.setHandler('login', async (data: {username: string, password: string}) => {
+      try {
+        const settings = device.getSettings();
         const token = await (this.homey.app as DeyeApp).api.login(settings.dataCenter, data.username, data.password);
-        device.setSettings({...settings, token});
-        device.onInit();
+        device.setSettings({
+          ...settings,
+          token
+        });
         return true;
       }catch(err){
         this.log('Repair login:', err);
         return false;
+      }
+    });
+
+    session.setHandler('update', async () => {
+      try {
+        const settings = device.getSettings();
+        const stations = await (this.homey.app as DeyeApp).api.getStationsWithDevice(settings.dataCenter, settings.token);
+        const station = stations.filter( station => station.id === settings.station.id)[0];
+
+        if(station){
+          device.setSettings({
+            settings,
+            station
+          });
+          device.onInit();
+          return 'updated';
+        } else {
+          this.log('Repair update station:', 'not_found');
+          return 'not_found';
+        }
+      }catch(err){
+        this.log('Repair update station:', err);
+        return 'error';
       }
     });
 

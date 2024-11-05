@@ -78,6 +78,9 @@
         "passwordLabel": { "en": "Password" },
         "passwordPlaceholder": { "en": "Password" }
       }
+    },
+    {
+      "id": "update"
     }
   ]
 }

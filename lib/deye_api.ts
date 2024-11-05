@@ -143,7 +143,10 @@ export default class DeyeAPI {
       data : JSON.stringify(payload)
     }
 
-    if(token) config.headers['Authorization'] = `Bearer ${token.accessToken}`;
+    if(token){
+      console.log(`[${token.accessToken}]`);
+      config.headers['Authorization'] = `Bearer ${token.accessToken}`;
+    }
 
     return config;
   }
