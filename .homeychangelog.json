@@ -34,5 +34,8 @@
   },
   "1.1.0": {
     "en": "Added 4 daily energy metrics, and change data source"
+  },
+  "1.1.1": {
+    "en": "Enhance repair function"
   }
 }
