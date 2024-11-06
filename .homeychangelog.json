@@ -37,5 +37,8 @@
   },
   "1.1.1": {
     "en": "Enhance repair function"
+  },
+  "1.2.0": {
+    "en": "Grid available capability and trigger card added, and battery charging limits modified "
   }
 }
