@@ -1,0 +1,36 @@
+
+<style>
+  .message { 
+    margin: 2rem 0; 
+    text-align: center;
+  }
+
+  .error {
+    color: var(--homey-color-text-danger);
+  }
+
+  .hide {
+    display: none !important;
+  }
+</style>
+
+<p id="updated" class="homey-subtitle message hide" data-i18n="repair.update.updated"></p>
+<p id="not_found" class="homey-subtitle message error hide" data-i18n="repair.update.not_found"></p>
+<p id="error" class="homey-subtitle message error hide" data-i18n="repair.update.error"></p>
+
+<button class="homey-button-primary-full hide" data-i18n="repair.update.done" id="btn" onclick="onDoneClick()"></button>
+
+<script>
+  Homey.setTitle( __('repair.update.title') );
+  Homey.showLoadingOverlay();
+
+  Homey.emit("update").then( res => {
+    document.getElementById(res).classList.remove("hide");
+    document.getElementById('btn').classList.remove("hide");
+    Homey.hideLoadingOverlay();
+  })
+
+  function onDoneClick() {
+    Homey.done()
+  }
+</script>

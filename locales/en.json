@@ -8,5 +8,14 @@
             "AMEA": "North or South America",
             "next": "Next"
         }
+    },
+    "repair": {
+        "update": {
+            "title": "Updating station data...",
+            "updated": "Login credentials and station data successfully updated.",
+            "not_found": "Station not found! Try to delete device and re add it!",
+            "error": "Error during update station data! Try again.",
+            "done": "Done"
+        }
     }
 }
