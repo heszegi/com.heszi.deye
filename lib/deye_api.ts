@@ -144,7 +144,6 @@ export default class DeyeAPI {
     }
 
     if(token){
-      console.log(`[${token.accessToken}]`);
       config.headers['Authorization'] = `Bearer ${token.accessToken}`;
     }
 
