@@ -141,7 +141,9 @@ export default class DeyeStationDevice extends Homey.Device {
       this.apiError = 0;
       this.setAvailable();
     } catch (err) {
-      this.log('Get device latest:', err);
+      this.log('Get device latest error: ', err);
+      this.log('Debug access: ', this.token.accessToken);
+      this.log('Debug station data: ', JSON.stringify(this.station));
   
       if (++this.apiError < 61) {
         const pollDelay = this.minimumPollInterval * 1000 * this.apiError;

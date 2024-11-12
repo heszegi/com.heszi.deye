@@ -48,7 +48,7 @@ export default class DeyeStationDriver extends Homey.Driver {
         token = await (this.homey.app as DeyeApp).api.login(dataCenter, data.username, data.password);
         return true;
       }catch(err){
-        this.log('Pair login:', err);
+        this.log('Pair login error: ', err);
         return false;
       }
     });
@@ -71,7 +71,7 @@ export default class DeyeStationDriver extends Homey.Driver {
           };
         });
       }catch(err){
-        this.log('Pair list devices:', err);
+        this.log('Pair list devices error: ', err);
         return []
       }
     });
@@ -89,7 +89,7 @@ export default class DeyeStationDriver extends Homey.Driver {
         });
         return true;
       }catch(err){
-        this.log('Repair login:', err);
+        this.log('Repair login error: ', err);
         return false;
       }
     });
@@ -108,11 +108,11 @@ export default class DeyeStationDriver extends Homey.Driver {
           device.onInit();
           return 'updated';
         } else {
-          this.log('Repair update station:', 'not_found');
+          this.log('Repair update station error: ', 'not_found');
           return 'not_found';
         }
       }catch(err){
-        this.log('Repair update station:', err);
+        this.log('Repair update station error: ', err);
         return 'error';
       }
     });
