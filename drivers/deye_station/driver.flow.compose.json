@@ -4,6 +4,10 @@
       "id": "station_data_updated",
       "highlight": true,
       "title": { "en": "Station data updated" },
+      "deprecated": true,
+      "hint": {
+        "en": "This trigger card is deprecated! Please use 'Measured data updated' or 'Daily data updated' trigger cards instead."
+      },
       "tokens": [
         {
           "name": "measure_battery",
@@ -61,13 +65,91 @@
         }
       ]
     },
+
+    {
+      "id": "measured_data_updated",
+      "highlight": true,
+      "title": { "en": "Measured data updated" },
+      "tokens": [
+        {
+          "name": "measure_battery",
+          "title": { "en": "Battery charge" },
+          "type": "number",
+          "example": 89
+        },
+        {
+          "name": "measure_battery_power",
+          "title": { "en": "Power from battery" },
+          "type": "number",
+          "example": 333
+        },
+        {
+          "name": "measure_consumption_power",
+          "title": { "en": "Power consumption" },
+          "type": "number",
+          "example": 277
+        },
+        {
+          "name": "measure_grid_power",
+          "title": { "en": "Power from grid" },
+          "type": "number",
+          "example": 7
+        },
+        {
+          "name": "measure_solar_power",
+          "title": { "en": "Power from solar cells" },
+          "type": "number",
+          "example": 1000
+        }
+      ]
+    },
+    {
+      "id": "daily_data_updated",
+      "highlight": true,
+      "title": { "en": "Daily data updated" },
+      "hint": {
+        "en": "Only available if data source is set to 'Device'!"
+      },
+      "tokens": [
+        {
+          "name": "daily_production",
+          "title": { "en": "Daily production" },
+          "type": "number",
+          "example": 11.3
+        },
+        {
+          "name": "daily_consumption",
+          "title": { "en": "Daily consumption" },
+          "type": "number",
+          "example": 12.7
+        },
+        {
+          "name": "daily_sell",
+          "title": { "en": "Daily energy sell" },
+          "type": "number",
+          "example": 1.2
+        },
+        {
+          "name": "daily_buy",
+          "title": { "en": "Daily energy buy" },
+          "type": "number",
+          "example": 0
+        }
+      ]
+    },
     {
       "id": "grid_available_true",
-      "title": { "en": "Grid available" }
+      "title": { "en": "Grid available" },
+      "hint": {
+        "en": "Only available if data source is set to 'Device'!"
+      }
     },
     {
       "id": "grid_available_false",
-      "title": { "en": "Grid unavailable" }
+      "title": { "en": "Grid unavailable" },
+      "hint": {
+        "en": "Only available if data source is set to 'Device'!"
+      }
     },
     {
       "id": "measure_battery_power_changed",
@@ -121,7 +203,10 @@
   "conditions": [
     {
       "id": "grid_available",
-      "title": { "en": "Grid !{{available|unavailable}}" }
+      "title": { "en": "Grid !{{available|unavailable}}" },
+      "hint": {
+        "en": "Only available if data source is set to 'Device'!"
+      }
     },
     {
       "id": "battery_charging",

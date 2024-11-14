@@ -1,28 +1,55 @@
 [
   {
-    "id": "normalPollInterval",
-    "type": "number",
+    "id": "latestDataSource",
+    "type": "dropdown",
     "label": {
-      "en": "Normal Polling Interval (seconds)"
+      "en": "Data source"
     },
-    "value": 390,
-    "min": 90,
-    "max": 3600,
+    "value": "device",
+    "values": [
+      {
+        "id": "device",
+        "label": { "en": "Device" }
+      },
+      {
+        "id": "station",
+        "label": { "en": "Station" }
+      }
+    ],
     "hint": {
-      "en": "The interval while station data updated in the cloud. Check your inverter logger settings! Default: 390"
+      "en": "Device: Default data source, suitable for most stations; includes 'Grid Availability' and daily data. Station: Provides less information, no 'Grid Availability' or daily data, but supports stations with multiple inverters and micro inverters."
     }
   },
   {
-    "id": "minimumPollInterval",
-    "type": "number",
-    "label": {
-      "en": "Minimum Polling Interval (seconds)"
-    },
-    "value": 30,
-    "min": 10,
-    "max": 300,
-    "hint": {
-      "en": "The interval while looking for updated station data after the Normal Polling Interval expired. Default: 30"
-    }
+    "type": "group",
+    "label": { "en": "Data poll settings" },
+    "children": [
+      {
+        "id": "normalPollInterval",
+        "type": "number",
+        "label": {
+          "en": "Normal Polling Interval (seconds)"
+        },
+        "value": 390,
+        "min": 90,
+        "max": 3600,
+        "hint": {
+          "en": "The interval while station data updated in the cloud. Check your inverter logger settings! Default: 390"
+        }
+      },
+      {
+        "id": "minimumPollInterval",
+        "type": "number",
+        "label": {
+          "en": "Minimum Polling Interval (seconds)"
+        },
+        "value": 30,
+        "min": 10,
+        "max": 300,
+        "hint": {
+          "en": "The interval while looking for updated station data after the Normal Polling Interval expired. Default: 30"
+        }
+      }
+    ]
   }
 ]

@@ -7,7 +7,9 @@ import { DATA_CENTER, ENERGY_PATTERN, IDeyeToken, ON_OFF, WORK_MODE } from '../.
 import DeyeStationDevice from './device';
 
 export default class DeyeStationDriver extends Homey.Driver {
-  stationDataUpdated_card!: Homey.FlowCardTriggerDevice;
+  stationDataUpdated_card!: Homey.FlowCardTriggerDevice; // deprecated @v1.2.2
+  measuredDataUpdated_card!: Homey.FlowCardTriggerDevice;
+  dailyDataUpdated_card!: Homey.FlowCardTriggerDevice;
 
   /**
    * onInit is called when the driver is initialized.
@@ -31,7 +33,10 @@ export default class DeyeStationDriver extends Homey.Driver {
     this.registerCapabiltyAction<number>('set_battery_low', 'setBatteryLow', 'percent');
     this.registerCapabiltyAction<number>('set_battery_grid_charge_current', 'setBatteryGridChargeCurrent', 'current');
 
-    this.stationDataUpdated_card = this.homey.flow.getDeviceTriggerCard('station_data_updated');
+    this.stationDataUpdated_card = this.homey.flow.getDeviceTriggerCard('station_data_updated'); // deprecated @v1.2.2
+    
+    this.measuredDataUpdated_card = this.homey.flow.getDeviceTriggerCard('measured_data_updated');
+    this.dailyDataUpdated_card = this.homey.flow.getDeviceTriggerCard('daily_data_updated');
   }
 
   async onPair(session: PairSession) {
@@ -130,10 +135,6 @@ export default class DeyeStationDriver extends Homey.Driver {
     this.homey.flow.getActionCard(capability).registerRunListener(async (args: any, state: any) => {
       args.device[listener](args[value]).catch(this.error);
     })
-  }
-
-  triggerStationDataUpdated(device: Homey.FlowCardTriggerDevice.Device, tokens: any, state: any) {
-    this.stationDataUpdated_card.trigger(device, tokens, state).catch(this.error);
   }
 }
 
