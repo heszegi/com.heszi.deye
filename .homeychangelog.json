@@ -43,5 +43,8 @@
   },
   "1.2.1": {
     "en": "Add more error logging "
+  },
+  "1.2.2": {
+    "en": "Added the option to select the data source in the device settings panel. Replaced the deprecated \"Station data updated\" trigger card with new \"Measured Data Updated\" and \"Daily Data Updated\" trigger cards."
   }
 }
