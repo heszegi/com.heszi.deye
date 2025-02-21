@@ -163,6 +163,7 @@ export default class DeyeStationDevice extends Homey.Device {
       this.setAvailable();
     } catch (err) {
       this.log('Get latest error: ', err);
+      this.log('Data center: ', this.dataCenter);
       this.log('Latest Data source: ', this.latestDataSource);
       this.log('Debug access: ', this.token.accessToken);
       this.log('Debug station data: ', JSON.stringify(this.station));
@@ -292,6 +293,12 @@ export default class DeyeStationDevice extends Homey.Device {
 
   async setEnergyPattern(value: ENERGY_PATTERN) {
     return this.api.setEnergyPattern(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
+  }
+
+  // Peak Shaving
+
+  async setGridPeakShaving(action: ON_OFF, power: number) {
+    return this.api.setGridPeakShaving(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, action, power);
   }
 
   // Battery Mode Controls

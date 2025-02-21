@@ -274,6 +274,20 @@ export default class DeyeAPI {
     throw new Error(`Error setting Energy Pattern property to ${value}! (${resp})`);
   }
 
+  async setGridPeakShaving(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, action: ON_OFF, power: number): Promise<IDeyeCommissionResponse> {
+    const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/order/gridPeakShaving/control',{
+      action,
+      power,
+      deviceSn
+    }));
+
+    if(resp.data?.success){
+      return resp.data;
+    }
+
+    throw new Error(`Error setting Grid Peak Shaving property to ${action} with ${power}W! (${resp})`);
+  }
+
   async setBatteryModeControl(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, type: BATTERY_MODE_CONTROL, value: ON_OFF): Promise<IDeyeCommissionResponse> {
     const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/order/battery/modeControl',{
       action: value,

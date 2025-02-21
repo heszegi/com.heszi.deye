@@ -22,16 +22,17 @@ export default class DeyeStationDriver extends Homey.Driver {
     this.registerCapabilityCondition('grid_feeding');
     this.registerCapabilityCondition('solar_production');
 
-    this.registerCapabiltyAction<ON_OFF>('set_solar_sell', 'setSolarSell', 'onoff');
-    this.registerCapabiltyAction<WORK_MODE>('set_work_mode', 'setWorkMode', 'workMode');
-    this.registerCapabiltyAction<ENERGY_PATTERN>('set_energy_pattern', 'setEnergyPattern', 'energyPattern');
+    this.registerCapabiltyAction('set_solar_sell', 'setSolarSell', 'onoff');
+    this.registerCapabiltyAction('set_work_mode', 'setWorkMode', 'workMode');
+    this.registerCapabiltyAction('set_energy_pattern', 'setEnergyPattern', 'energyPattern');
+    this.registerCapabiltyAction('set_grid_peak_shaving', 'setGridPeakShaving', ['onoff', 'power']);
 
-    this.registerCapabiltyAction<ON_OFF>('set_battery_grid_charge', 'setBatteryGridCharge', 'onoff');
-    this.registerCapabiltyAction<ON_OFF>('set_battery_gen_charge', 'setBatteryGenCharge', 'onoff');
-    this.registerCapabiltyAction<number>('set_battery_max_discharge_current', 'setBatteryMaxDischargeCurrent', 'current');
-    this.registerCapabiltyAction<number>('set_battery_max_charge_current', 'setBatteryMaxChargeCurrent', 'current');
-    this.registerCapabiltyAction<number>('set_battery_low', 'setBatteryLow', 'percent');
-    this.registerCapabiltyAction<number>('set_battery_grid_charge_current', 'setBatteryGridChargeCurrent', 'current');
+    this.registerCapabiltyAction('set_battery_grid_charge', 'setBatteryGridCharge', 'onoff');
+    this.registerCapabiltyAction('set_battery_gen_charge', 'setBatteryGenCharge', 'onoff');
+    this.registerCapabiltyAction('set_battery_max_discharge_current', 'setBatteryMaxDischargeCurrent', 'current');
+    this.registerCapabiltyAction('set_battery_max_charge_current', 'setBatteryMaxChargeCurrent', 'current');
+    this.registerCapabiltyAction('set_battery_low', 'setBatteryLow', 'percent');
+    this.registerCapabiltyAction('set_battery_grid_charge_current', 'setBatteryGridChargeCurrent', 'current');
 
     this.stationDataUpdated_card = this.homey.flow.getDeviceTriggerCard('station_data_updated'); // deprecated @v1.2.2
     
@@ -131,9 +132,12 @@ export default class DeyeStationDriver extends Homey.Driver {
     });
   }
 
-  registerCapabiltyAction<T>(capability: string, listener: string, value: string) {
+  registerCapabiltyAction(capability: string, listener: string, valueName: string | string[]) {
     this.homey.flow.getActionCard(capability).registerRunListener(async (args: any, state: any) => {
-      args.device[listener](args[value]).catch(this.error);
+      const values = [];
+      if(Array.isArray(valueName)) valueName.forEach(v => values.push(args[v]));
+      else values.push(args[valueName]);
+      (args.device[listener] as Function).apply(args.device, values).catch(this.error);
     })
   }
 }

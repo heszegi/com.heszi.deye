@@ -290,6 +290,38 @@
       ]
     },
     {
+      "id": "set_grid_peak_shaving",
+      "title": { 
+        "en": "Set Grid Peak Shaving..."
+      },
+      "titleFormatted": {
+        "en": "Set Grid Peak Shaving to [[onoff]] with [[power]]W"
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "onoff",
+          "title": {
+            "en": "On/Off"
+          },
+          "values": [
+            { "id": "on", "title": { "en": "On" } },
+            { "id": "off", "title": { "en": "Off" } }
+          ]
+        },
+        {
+          "type": "number",
+          "name": "power",
+          "title": {
+            "en": "Power"
+          },
+          "min": 1000,
+          "max": 65000,
+          "step": 1000
+        }
+      ]
+    },
+    {
       "id": "set_battery_grid_charge",
       "title": { 
         "en": "Set Battery Grid Charge to..."
