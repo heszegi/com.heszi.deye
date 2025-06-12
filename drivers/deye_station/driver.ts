@@ -51,7 +51,7 @@ export default class DeyeStationDriver extends Homey.Driver {
 
     session.setHandler('login', async (data: {username: string, password: string}) => {
       try{
-        token = await (this.homey.app as DeyeApp).api.login(dataCenter, data.username, data.password);
+        token = await (this.homey.app as DeyeApp).deyeAPI.login(dataCenter, data.username, data.password);
         return true;
       }catch(err){
         this.log('Pair login error: ', err);
@@ -61,7 +61,7 @@ export default class DeyeStationDriver extends Homey.Driver {
 
     session.setHandler('list_devices', async () => {
       try{
-        const stations = await (this.homey.app as DeyeApp).api.getStationsWithDevice(dataCenter, token);
+        const stations = await (this.homey.app as DeyeApp).deyeAPI.getStationsWithDevice(dataCenter, token);
 
         return stations.map((station) => {
           return {
@@ -88,7 +88,7 @@ export default class DeyeStationDriver extends Homey.Driver {
     session.setHandler('login', async (data: {username: string, password: string}) => {
       try {
         const settings = device.getSettings();
-        const token = await (this.homey.app as DeyeApp).api.login(settings.dataCenter, data.username, data.password);
+        const token = await (this.homey.app as DeyeApp).deyeAPI.login(settings.dataCenter, data.username, data.password);
         device.setSettings({
           ...settings,
           token
@@ -103,7 +103,7 @@ export default class DeyeStationDriver extends Homey.Driver {
     session.setHandler('update', async () => {
       try {
         const settings = device.getSettings();
-        const stations = await (this.homey.app as DeyeApp).api.getStationsWithDevice(settings.dataCenter, settings.token);
+        const stations = await (this.homey.app as DeyeApp).deyeAPI.getStationsWithDevice(settings.dataCenter, settings.token);
         const station = stations.filter( station => station.id === settings.station.id)[0];
 
         if(station){

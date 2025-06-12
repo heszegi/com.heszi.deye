@@ -2,14 +2,17 @@
 
 import Homey from 'homey';
 import DeyeAPI from './lib/deye_api';
+import SolarmanAPI from './lib/solarman_api';
 
 export default class DeyeApp extends Homey.App {
-  api!: DeyeAPI;
+  deyeAPI!: DeyeAPI;
+  solarmanAPI!: SolarmanAPI;
 
   async onInit() {
     this.log('MyApp has been initialized');
 
-    this.api = new DeyeAPI();
+    this.deyeAPI = new DeyeAPI();
+    this.solarmanAPI = new SolarmanAPI();
   }
 }
 

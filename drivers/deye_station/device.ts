@@ -4,10 +4,12 @@ import Homey from 'homey';
 import DeyeApp from '../../app';
 import { BATTERY_MODE_CONTROL, BATTERY_PARAMETER, DATA_CENTER, ENERGY_PATTERN, IDeyeDeviceLatestData, IDeyeDeviceLatestKeyValue, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken, ON_OFF, WORK_MODE } from '../../lib/deye_api';
 import DeyeStationDriver from './driver';
+import { ISolarmanLatestData } from '../../lib/solarman_api';
 
 enum LatestDataSource {
   STATION = 'station',
-  DEVICE = 'device'
+  DEVICE = 'device',
+  SOLARMAN = 'solarman'
 }
 
 interface ILatestData {
@@ -33,16 +35,23 @@ interface ILatestData {
 };
 
 export default class DeyeStationDevice extends Homey.Device {
-  api = (this.homey.app as DeyeApp).api;
+  deyeApi = (this.homey.app as DeyeApp).deyeAPI;
+  solarmanApi = (this.homey.app as DeyeApp).solarmanAPI;
+
   apiError = 0;
 
   driver!: DeyeStationDriver;
   dataCenter!: DATA_CENTER;
   token!: IDeyeToken;
   station!: IDeyeStationWithDevice;
+  latestDataSource!: LatestDataSource;
   normalPollInterval!: number;
   minimumPollInterval!: number;
-  latestDataSource!: LatestDataSource;
+  localIp!: string;
+  localPort!: number;
+  unitId!: number;
+  solarmanSerial!: string;
+  localPollInterval!: number;
   lastData!: ILatestData;
   polling?: NodeJS.Timeout;
 
@@ -55,9 +64,14 @@ export default class DeyeStationDevice extends Homey.Device {
     this.dataCenter = this.getSetting('dataCenter');
     this.token = this.getSetting('token');
     this.station = this.getSetting('station');
+    this.latestDataSource = this.getSetting('latestDataSource');
     this.normalPollInterval = this.getSetting('normalPollInterval');
     this.minimumPollInterval = this.getSetting('minimumPollInterval');
-    this.latestDataSource = this.getSetting('latestDataSource');
+    this.localIp = this.getSetting('localIp');
+    this.localPort = this.getSetting('localPort');
+    this.unitId = this.getSetting('unitId');
+    this.solarmanSerial = this.getSetting('solarmanSerial');
+    this.localPollInterval = this.getSetting('localPollInterval');
 
     await this.updateCapabilites();
 
@@ -105,9 +119,16 @@ export default class DeyeStationDevice extends Homey.Device {
   async onSettings({oldSettings, newSettings, changedKeys}: { oldSettings: { [key: string]: boolean | string | number | undefined | null }; newSettings: { [key: string]: boolean | string | number | undefined | null }; changedKeys: string[]; }): Promise<string | void> {
     this.log("MyDevice settings where changed");
 
+    this.latestDataSource = newSettings.latestDataSource as LatestDataSource;
+
     this.normalPollInterval = newSettings.normalPollInterval as number;
     this.minimumPollInterval = newSettings.minimumPollInterval as number;
-    this.latestDataSource = newSettings.latestDataSource as LatestDataSource;
+
+    this.localIp = newSettings.localIp as string;
+    this.localPort = newSettings.localPort as number;
+    this.unitId = newSettings.unitId as number;
+    this.solarmanSerial = newSettings.solarmanSerial as string;
+    this.localPollInterval = newSettings.localPollInterval as number;
 
     this.updateCapabilites();
     this.pollLatest();
@@ -141,7 +162,7 @@ export default class DeyeStationDevice extends Homey.Device {
     ];
 
     for (const cap of deviceOnlyCapabilites){
-      if(this.latestDataSource === LatestDataSource.DEVICE){
+      if(this.latestDataSource === LatestDataSource.SOLARMAN || this.latestDataSource === LatestDataSource.DEVICE){
         if (!this.hasCapability(cap)) await this.addCapability(cap);
       }else{
         if (this.hasCapability(cap)) await this.removeCapability(cap);
@@ -155,27 +176,36 @@ export default class DeyeStationDevice extends Homey.Device {
     let latest: ILatestData;
 
     try {
-      latest = this.latestDataSource === LatestDataSource.DEVICE ? 
-        this.getLatestDataFromDevice(await this.api.getDeviceLatest(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn)) :
-        this.getLatestDataFromStation(await this.api.getStationLatest(this.dataCenter, this.token, this.station.id));
+      switch (this.latestDataSource) {
+        case LatestDataSource.DEVICE:
+          latest = this.getLatestDataFromDevice(await this.deyeApi.getDeviceLatest(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn));
+          break;
+        case LatestDataSource.STATION:
+          latest = this.getLatestDataFromStation(await this.deyeApi.getStationLatest(this.dataCenter, this.token, this.station.id));
+          break;
+        case LatestDataSource.SOLARMAN:
+          latest = this.getLatestDataFromSolarman(await this.solarmanApi.getLatest(this.localIp, this.localPort, this.unitId, this.solarmanSerial));
+          break;
+      }
       
       this.apiError = 0;
       this.setAvailable();
     } catch (err) {
       this.log('Get latest error: ', err);
-      this.log('Data center: ', this.dataCenter);
       this.log('Latest Data source: ', this.latestDataSource);
+      this.log('Data center: ', this.dataCenter);
       this.log('Debug access: ', this.token.accessToken);
       this.log('Debug station data: ', JSON.stringify(this.station));
   
       if (++this.apiError < 61) {
-        const pollDelay = this.minimumPollInterval * 1000 * this.apiError;
+        const pollInterval = this.latestDataSource === LatestDataSource.SOLARMAN ? this.localPollInterval : this.normalPollInterval;
+        const pollDelay = pollInterval * 1000 * this.apiError;
         this.polling = this.homey.setTimeout(this.pollLatest.bind(this), pollDelay);
       } else {
-        this.log('Reached max number of API call tries!');
+        this.log('Maximum number of API call attempts reached!');
       }
       
-      this.setUnavailable();
+      this.setUnavailable('Maximum number of API call attempts reached! Please check your login credentials and network connection.');
       return;
     }
 
@@ -188,7 +218,7 @@ export default class DeyeStationDevice extends Homey.Device {
       Object.entries(latest.dataTokens).forEach(capability => this.setAvailableCapabilityValue(capability[0], capability[1]));
       this.driver.measuredDataUpdated_card.trigger(this, latest.dataTokens, {}).catch(this.error);
 
-      if (latest.type === LatestDataSource.DEVICE) {
+      if (latest.type === LatestDataSource.SOLARMAN || latest.type === LatestDataSource.DEVICE) {
         Object.entries(latest.dailyTokens!).forEach(capability => this.setAvailableCapabilityValue(capability[0], capability[1]));
         this.driver.dailyDataUpdated_card.trigger(this, latest.dailyTokens, {}).catch(this.error);
 
@@ -208,9 +238,15 @@ export default class DeyeStationDevice extends Homey.Device {
 
       this.lastData = latest;
     }
-  
-    const tillNext = (latest.lastUpdateTime + this.normalPollInterval) - Math.floor(Date.now() / 1000);
-    const pollDelay = (tillNext <= 0 ? this.minimumPollInterval : tillNext) * 1000;
+
+    let pollDelay:number;
+    if(latest.type === LatestDataSource.SOLARMAN){
+      pollDelay = this.localPollInterval * 1000;
+    }else{
+      const tillNext = (latest.lastUpdateTime + this.normalPollInterval) - Math.floor(Date.now() / 1000);
+      pollDelay = (tillNext <= 0 ? this.minimumPollInterval : tillNext) * 1000;
+    }
+    
     this.polling = this.homey.setTimeout(this.pollLatest.bind(this), pollDelay);
   }
 
@@ -270,6 +306,33 @@ export default class DeyeStationDevice extends Homey.Device {
     return latest;
   }
 
+  getLatestDataFromSolarman(data: ISolarmanLatestData): ILatestData {
+    const latest = {
+      type: LatestDataSource.SOLARMAN,
+      lastUpdateTime: data.updateTime,
+      dataTokens: {
+        measure_battery: data.battery,
+        measure_battery_power: data.battery_power,
+        measure_consumption_power: data.consumption_power,
+        measure_grid_power: data.grid_power,
+        measure_solar_power: data.solar_power
+      },
+      dailyTokens: {
+        daily_production: data.daily_production,
+        daily_consumption: data.daily_consumption,
+        daily_sell: data.daily_sell,
+        daily_buy: data.daily_buy
+      }
+    } as ILatestData;
+
+    latest.grid_available = true;
+    latest.solar_production = latest.dataTokens.measure_solar_power > 0;
+    latest.battery_charging = latest.dataTokens.measure_battery_power < 0 && latest.dataTokens.measure_battery < 99;
+    latest.grid_feeding = latest.dataTokens.measure_grid_power < 0;
+
+    return latest;
+  }
+
   setAvailableCapabilityValue(capabilityId: string, value: any): Promise<void> {
     if(this.hasCapability(capabilityId)) {
       return this.setCapabilityValue(capabilityId, value);
@@ -280,53 +343,53 @@ export default class DeyeStationDevice extends Homey.Device {
   // Solar Sell
 
   async setSolarSell(value: ON_OFF) {
-    return this.api.setSolarSell(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
+    return this.deyeApi.setSolarSell(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
   }
 
   // Work Mode
 
   async setWorkMode(value: WORK_MODE) {
-    return this.api.setWorkMode(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
+    return this.deyeApi.setWorkMode(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
   }
 
   // Energy Pattern
 
   async setEnergyPattern(value: ENERGY_PATTERN) {
-    return this.api.setEnergyPattern(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
+    return this.deyeApi.setEnergyPattern(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
   }
 
   // Peak Shaving
 
   async setGridPeakShaving(action: ON_OFF, power: number) {
-    return this.api.setGridPeakShaving(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, action, power);
+    return this.deyeApi.setGridPeakShaving(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, action, power);
   }
 
   // Battery Mode Controls
 
   async setBatteryGridCharge(value: ON_OFF) {
-    return this.api.setBatteryModeControl(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_MODE_CONTROL.GRID_CHARGE, value);
+    return this.deyeApi.setBatteryModeControl(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_MODE_CONTROL.GRID_CHARGE, value);
   }
   
   async setBatteryGenCharge(value: ON_OFF) {
-    return this.api.setBatteryModeControl(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_MODE_CONTROL.GEN_CHARGE, value);
+    return this.deyeApi.setBatteryModeControl(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_MODE_CONTROL.GEN_CHARGE, value);
   }
 
   // Battery Paramters
 
   async setBatteryMaxDischargeCurrent(value: number) {
-    return this.api.setBatteryParamater(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_PARAMETER.MAX_DISCHARGE_CURRENT, value);
+    return this.deyeApi.setBatteryParamater(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_PARAMETER.MAX_DISCHARGE_CURRENT, value);
   }
 
   async setBatteryMaxChargeCurrent(value: number) {
-    return this.api.setBatteryParamater(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_PARAMETER.MAX_CHARGE_CURRENT, value);
+    return this.deyeApi.setBatteryParamater(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_PARAMETER.MAX_CHARGE_CURRENT, value);
   }
 
   async setBatteryLow(value: number) {
-    return this.api.setBatteryParamater(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_PARAMETER.BATT_LOW, value);
+    return this.deyeApi.setBatteryParamater(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_PARAMETER.BATT_LOW, value);
   }
 
   async setBatteryGridChargeCurrent(value: number) {
-    return this.api.setBatteryParamater(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_PARAMETER.GRID_CHARGE_AMPERE, value);
+    return this.deyeApi.setBatteryParamater(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, BATTERY_PARAMETER.GRID_CHARGE_AMPERE, value);
   }
 }
 

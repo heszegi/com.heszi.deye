@@ -888,24 +888,30 @@
             {
               "id": "device",
               "label": {
-                "en": "Device"
+                "en": "Device (cloud)"
               }
             },
             {
               "id": "station",
               "label": {
-                "en": "Station"
+                "en": "Station (cloud)"
+              }
+            },
+            {
+              "id": "solarman",
+              "label": {
+                "en": "Solarman (local)"
               }
             }
           ],
           "hint": {
-            "en": "Device: Default data source, suitable for most stations; includes 'Grid Availability' and daily data. Station: Provides less information, no 'Grid Availability' or daily data, but supports stations with multiple inverters and micro inverters."
+            "en": "Device: Default data source, suitable for most stations; includes 'Grid Availability' and daily data. Station: Provides less information, no 'Grid Availability' or daily data, but supports stations with multiple inverters and micro inverters. Solarman: Local data source, suitable for Solarman data loggers over local network."
           }
         },
         {
           "type": "group",
           "label": {
-            "en": "Data poll settings"
+            "en": "Settings for cloud data source"
           },
           "children": [
             {
@@ -932,6 +938,76 @@
               "max": 300,
               "hint": {
                 "en": "The interval while looking for updated station data after the Normal Polling Interval expired. Default: 30"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Settings for local data source"
+          },
+          "children": [
+            {
+              "id": "localIp",
+              "type": "text",
+              "label": {
+                "en": "Device IP address"
+              },
+              "value": "",
+              "pattern": "[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}",
+              "hint": {
+                "en": "The IP address of the Solarman device"
+              }
+            },
+            {
+              "id": "localPort",
+              "type": "number",
+              "label": {
+                "en": "Device port"
+              },
+              "value": 8899,
+              "min": 1,
+              "max": 65535,
+              "hint": {
+                "en": "The port number of the Solarman device, usually 8899 by default."
+              }
+            },
+            {
+              "id": "unitId",
+              "type": "number",
+              "label": {
+                "en": "Unit ID"
+              },
+              "value": 1,
+              "min": 1,
+              "max": 10,
+              "hint": {
+                "en": "The unit ID of the Solarman device, usually 1 by normal case."
+              }
+            },
+            {
+              "id": "solarmanSerial",
+              "type": "text",
+              "label": {
+                "en": "Solarman serial"
+              },
+              "value": "",
+              "hint": {
+                "en": "The serial number of your Solarman network device (logger serial)."
+              }
+            },
+            {
+              "id": "localPollInterval",
+              "type": "number",
+              "label": {
+                "en": "Polling Interval (seconds)"
+              },
+              "value": 10,
+              "min": 1,
+              "max": 60,
+              "hint": {
+                "en": "The interval while data polled from the device."
               }
             }
           ]
