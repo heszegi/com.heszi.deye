@@ -49,5 +49,8 @@
   },
   "1.2.3": {
     "en": "Add 'Set Grid Peak Shaving' action flow card"
+  },
+  "1.2.4": {
+    "en": "The maximum battery-related current limit has been increased to 240A due to the use of high-capacity inverters."
   }
 }
