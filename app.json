@@ -681,7 +681,7 @@
               "en": "Current"
             },
             "min": 0,
-            "max": 120,
+            "max": 240,
             "step": 1
           }
         ]
@@ -707,7 +707,7 @@
               "en": "Current"
             },
             "min": 0,
-            "max": 120,
+            "max": 240,
             "step": 1
           }
         ]
@@ -759,7 +759,7 @@
               "en": "Current"
             },
             "min": 0,
-            "max": 120,
+            "max": 240,
             "step": 1
           }
         ]
