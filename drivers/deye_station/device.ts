@@ -2,7 +2,7 @@
 
 import Homey from 'homey';
 import DeyeApp from '../../app';
-import { BATTERY_MODE_CONTROL, BATTERY_PARAMETER, DATA_CENTER, ENERGY_PATTERN, IDeyeDeviceLatestData, IDeyeDeviceLatestKeyValue, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken, ON_OFF, WORK_MODE } from '../../lib/deye_api';
+import { BATTERY_MODE_CONTROL, BATTERY_PARAMETER, DATA_CENTER, DAYS_OF_WEEK, ENERGY_PATTERN, IDeyeDeviceLatestData, IDeyeDeviceLatestKeyValue, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken, ON_OFF, WORK_MODE } from '../../lib/deye_api';
 import DeyeStationDriver from './driver';
 
 enum LatestDataSource {
@@ -299,6 +299,30 @@ export default class DeyeStationDevice extends Homey.Device {
 
   async setGridPeakShaving(action: ON_OFF, power: number) {
     return this.api.setGridPeakShaving(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, action, power);
+  }
+
+  // Time Of Use
+
+  async setTimeOfUseAction(days: (DAYS_OF_WEEK | 'NEVER')[]) {
+    let action = ON_OFF.ON;
+    if(days.includes('NEVER')){
+      action = ON_OFF.OFF;
+      days = days.filter(d => d !== 'NEVER');
+    }
+    return this.api.setTimeOufUseAction(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, action, days as DAYS_OF_WEEK[]);
+  }
+  
+  async setTimeUseSettingItems(timeslot: number, onoff_grid: ON_OFF, onoff_gen: ON_OFF, power: number, soc: number) {
+    const current = await this.api.getTimeOfUse(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn);
+    current.timeUseSettingItems[timeslot] = {
+      ...current.timeUseSettingItems[timeslot],
+      enableGridCharge: onoff_grid === ON_OFF.ON,
+      enableGeneration: onoff_gen === ON_OFF.ON,
+      power,
+      soc
+    };
+    current.timeUseSettingItems.forEach(item => item.time = item.time.slice(0, 2) + ':' + item.time.slice(2, 4)); // API wants HH:MM format
+    return this.api.setTimeUseSettingItems(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, current.timeUseSettingItems);
   }
 
   // Battery Mode Controls

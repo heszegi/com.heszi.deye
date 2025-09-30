@@ -1,7 +1,7 @@
 {
   "id": "com.heszi.deye",
   "version": "1.2.4",
-  "compatibility": ">=5.0.0",
+  "compatibility": ">=12.5.0",
   "sdk": 3,
   "brandColor": "#005CB9",
   "platforms": [

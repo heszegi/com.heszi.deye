@@ -2,7 +2,7 @@
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.heszi.deye",
   "version": "1.2.4",
-  "compatibility": ">=5.0.0",
+  "compatibility": ">=12.5.0",
   "sdk": 3,
   "brandColor": "#005CB9",
   "platforms": [
@@ -583,6 +583,209 @@
             "min": 1000,
             "max": 65000,
             "step": 1000
+          }
+        ]
+      },
+      {
+        "id": "set_time_of_use_action",
+        "title": {
+          "en": "Set Time Of Use active at..."
+        },
+        "titleFormatted": {
+          "en": "Set Time Of Use active at [[days]]"
+        },
+        "hint": {
+          "en": "If select 'Never' all other selections will be dismissed, and TOU turned off."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          },
+          {
+            "title": {
+              "en": "Day"
+            },
+            "name": "days",
+            "type": "multiselect",
+            "conjunction": "and",
+            "values": [
+              {
+                "id": "NEVER",
+                "title": {
+                  "en": "Never"
+                }
+              },
+              {
+                "id": "MONDAY",
+                "title": {
+                  "en": "Monday"
+                }
+              },
+              {
+                "id": "TUESDAY",
+                "title": {
+                  "en": "Tuesday"
+                }
+              },
+              {
+                "id": "WEDNESDAY",
+                "title": {
+                  "en": "Wednesday"
+                }
+              },
+              {
+                "id": "THURSDAY",
+                "title": {
+                  "en": "Thursday"
+                }
+              },
+              {
+                "id": "FRIDAY",
+                "title": {
+                  "en": "Friday"
+                }
+              },
+              {
+                "id": "SATURDAY",
+                "title": {
+                  "en": "Saturday"
+                }
+              },
+              {
+                "id": "SUNDAY",
+                "title": {
+                  "en": "Sunday"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "set_time_use_settings",
+        "title": {
+          "en": "Set Time Of Use timeslot..."
+        },
+        "titleFormatted": {
+          "en": "Set Time Of Use for [[timeslot]] with Grid Charge [[onoff_grid]], Gen Charge [[onoff_gen]], Power [[power]]W and Battery to [[soc]]%"
+        },
+        "hint": {
+          "en": "Timeslot intervals can be set up through the official Deye app."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station"
+          },
+          {
+            "type": "dropdown",
+            "name": "timeslot",
+            "title": {
+              "en": "Timeslot"
+            },
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Timeslot 1"
+                }
+              },
+              {
+                "id": "1",
+                "title": {
+                  "en": "Timeslot 2"
+                }
+              },
+              {
+                "id": "2",
+                "title": {
+                  "en": "Timeslot 3"
+                }
+              },
+              {
+                "id": "3",
+                "title": {
+                  "en": "Timeslot 4"
+                }
+              },
+              {
+                "id": "4",
+                "title": {
+                  "en": "Timeslot 5"
+                }
+              },
+              {
+                "id": "5",
+                "title": {
+                  "en": "Timeslot 6"
+                }
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "name": "onoff_grid",
+            "title": {
+              "en": "Grid On/Off"
+            },
+            "values": [
+              {
+                "id": "on",
+                "title": {
+                  "en": "On"
+                }
+              },
+              {
+                "id": "off",
+                "title": {
+                  "en": "Off"
+                }
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "name": "onoff_gen",
+            "title": {
+              "en": "Gen On/Off"
+            },
+            "values": [
+              {
+                "id": "on",
+                "title": {
+                  "en": "On"
+                }
+              },
+              {
+                "id": "off",
+                "title": {
+                  "en": "Off"
+                }
+              }
+            ]
+          },
+          {
+            "type": "number",
+            "name": "power",
+            "title": {
+              "en": "Power"
+            },
+            "min": 0,
+            "max": 5000,
+            "step": 1000
+          },
+          {
+            "type": "number",
+            "name": "soc",
+            "title": {
+              "en": "SOC"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1
           }
         ]
       },

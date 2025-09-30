@@ -26,6 +26,8 @@ export default class DeyeStationDriver extends Homey.Driver {
     this.registerCapabiltyAction('set_work_mode', 'setWorkMode', 'workMode');
     this.registerCapabiltyAction('set_energy_pattern', 'setEnergyPattern', 'energyPattern');
     this.registerCapabiltyAction('set_grid_peak_shaving', 'setGridPeakShaving', ['onoff', 'power']);
+    this.registerCapabiltyAction('set_time_of_use_action', 'setTimeOfUseAction', ['days']);
+    this.registerCapabiltyAction('set_time_use_settings', 'setTimeUseSettingItems', ['timeslot', 'onoff_grid', 'onoff_gen', 'power', 'soc']);
 
     this.registerCapabiltyAction('set_battery_grid_charge', 'setBatteryGridCharge', 'onoff');
     this.registerCapabiltyAction('set_battery_gen_charge', 'setBatteryGenCharge', 'onoff');
