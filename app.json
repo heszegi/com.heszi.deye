@@ -681,11 +681,12 @@
             "filter": "driver_id=deye_station"
           },
           {
-            "type": "dropdown",
             "name": "timeslot",
             "title": {
               "en": "Timeslot"
             },
+            "type": "multiselect",
+            "conjunction": "and",
             "values": [
               {
                 "id": "0",

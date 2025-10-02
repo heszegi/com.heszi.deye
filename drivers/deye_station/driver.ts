@@ -139,7 +139,7 @@ export default class DeyeStationDriver extends Homey.Driver {
       const values = [];
       if(Array.isArray(valueName)) valueName.forEach(v => values.push(args[v]));
       else values.push(args[valueName]);
-      (args.device[listener] as Function).apply(args.device, values).catch(this.error);
+      await (args.device[listener] as Function).apply(args.device, values).catch(this.error);
     })
   }
 }

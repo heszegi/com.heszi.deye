@@ -365,11 +365,12 @@
       },
       "args": [
         {
-          "type": "dropdown",
           "name": "timeslot",
           "title": {
             "en": "Timeslot"
           },
+          "type": "multiselect",
+          "conjunction": "and",
           "values": [
             { "id": "0", "title": { "en": "Timeslot 1" } },
             { "id": "1", "title": { "en": "Timeslot 2" } },

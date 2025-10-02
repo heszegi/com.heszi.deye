@@ -312,17 +312,23 @@ export default class DeyeStationDevice extends Homey.Device {
     return this.api.setTimeOufUseAction(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, action, days as DAYS_OF_WEEK[]);
   }
   
-  async setTimeUseSettingItems(timeslot: number, onoff_grid: ON_OFF, onoff_gen: ON_OFF, power: number, soc: number) {
+  async setTimeUseSettingItems(timeslot: number[], onoff_grid: ON_OFF, onoff_gen: ON_OFF, power: number, soc: number) {
     const current = await this.api.getTimeOfUse(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn);
-    current.timeUseSettingItems[timeslot] = {
-      ...current.timeUseSettingItems[timeslot],
-      enableGridCharge: onoff_grid === ON_OFF.ON,
-      enableGeneration: onoff_gen === ON_OFF.ON,
-      power,
-      soc
-    };
+
+    timeslot.forEach(t => {
+      current.timeUseSettingItems[timeslot[t]] = {
+        ...current.timeUseSettingItems[timeslot[t]],
+        enableGridCharge: onoff_grid === ON_OFF.ON,
+        enableGeneration: onoff_gen === ON_OFF.ON,
+        power,
+        soc
+      };
+    });
     current.timeUseSettingItems.forEach(item => item.time = item.time.slice(0, 2) + ':' + item.time.slice(2, 4)); // API wants HH:MM format
-    return this.api.setTimeUseSettingItems(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, current.timeUseSettingItems);
+
+    const ret = await this.api.setTimeUseSettingItems(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, current.timeUseSettingItems);
+    await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds to let the inverter process the new settings
+    return ret;
   }
 
   // Battery Mode Controls
