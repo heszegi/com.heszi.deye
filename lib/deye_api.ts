@@ -1,6 +1,7 @@
 'use strict';
 
 import axios, { AxiosRequestHeaders } from 'axios';
+import { log } from 'console';
 import { sha256 } from 'js-sha256';
 
 const Homey = require('homey');
@@ -42,6 +43,16 @@ export enum BATTERY_PARAMETER {
 export enum DATA_CENTER {
   EMEA_APAC = 'EMEA_APAC',
   AMEA = 'AMEA'
+}
+
+export enum DAYS_OF_WEEK {
+  MONDAY = 'MONDAY',
+  TUESDAY = 'TUESDAY',
+  WEDNESDAY = 'WEDNESDAY',
+  THURSDAY = 'THURSDAY',
+  FRIDAY = 'FRIDAY',
+  SATURDAY = 'SATURDAY',
+  SUNDAY = 'SUNDAY'
 }
 
 export interface IDeyeToken {
@@ -109,6 +120,20 @@ export interface IDeyeDeviceLatestData {
   deviceState: DEVICE_STATE;
   collectionTime: number;
   dataList: IDeyeDeviceLatestKeyValue<string>[];
+}
+
+interface IDeyeTimeUseSetting {
+  power: number;
+  voltage: number;
+  time: string;
+  enableGridCharge: boolean;
+  enableGeneration: boolean;
+  soc: number
+}
+
+export interface IDeyeTOUData {
+  touAction: ON_OFF;
+  timeUseSettingItems: IDeyeTimeUseSetting[];
 }
 
 export interface IDeyeCommissionResponse {
@@ -235,6 +260,21 @@ export default class DeyeAPI {
     throw new Error(`Error loading Device latest data! (${resp})`);
   }
 
+  async getTimeOfUse(dc: DATA_CENTER, token: IDeyeToken, deviceSN: string): Promise<IDeyeTOUData> {
+    const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/config/tou',{
+      deviceSn: deviceSN
+    }));
+
+    if(resp.data?.success){
+      return {
+        touAction: resp.data.touAction,
+        timeUseSettingItems: resp.data.timeUseSettingItems
+      };
+    }
+
+    throw new Error(`Error loading Time Of Use data! (${resp})`);
+  }
+
   async setSolarSell(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, value: ON_OFF): Promise<IDeyeCommissionResponse> {
     const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/order/sys/solarSell/control',{
       action: value,
@@ -286,6 +326,33 @@ export default class DeyeAPI {
     }
 
     throw new Error(`Error setting Grid Peak Shaving property to ${action} with ${power}W! (${resp})`);
+  }
+
+  async setTimeOufUseAction(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, action: ON_OFF, days: DAYS_OF_WEEK[]): Promise<IDeyeCommissionResponse> {
+    const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/order/sys/tou/switch',{
+      deviceSn,
+      action,
+      days
+    }));
+
+    if(resp.data?.success){
+      return resp.data;
+    }
+
+    throw new Error(`Error setting Time Of Use Action property to ${action}, ${days}! (${resp})`);
+  }
+
+  async setTimeUseSettingItems(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, timeUseSettingItems:IDeyeTimeUseSetting[]): Promise<IDeyeCommissionResponse> {
+    const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/order/sys/tou/update',{
+      deviceSn,
+      timeUseSettingItems
+    }));
+
+    if(resp.data?.success){
+      return resp.data;
+    }
+
+    throw new Error(`Error setting Time Of Use Setting Items to ${timeUseSettingItems}! (${resp})`);
   }
 
   async setBatteryModeControl(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, type: BATTERY_MODE_CONTROL, value: ON_OFF): Promise<IDeyeCommissionResponse> {
