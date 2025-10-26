@@ -224,10 +224,10 @@
     {
       "id": "set_solar_sell",
       "title": { 
-        "en": "Set Solar Sell to..."
+        "en": "Set 'Solar Sell' to..."
       },
       "titleFormatted": {
-        "en": "Set Solar Sell to [[onoff]]"
+        "en": "Set 'Solar Sell' to [[onoff]]"
       },
       "args": [
         {
@@ -246,10 +246,10 @@
     {
       "id": "set_work_mode",
       "title": { 
-        "en": "Set Work Mode to..."
+        "en": "Set 'Work Mode' to..."
       },
       "titleFormatted": {
-        "en": "Set Work Mode to [[workMode]]"
+        "en": "Set 'Work Mode' to [[workMode]]"
       },
       "args": [
         {
@@ -269,10 +269,10 @@
     {
       "id": "set_energy_pattern",
       "title": { 
-        "en": "Set Energy Pattern to..."
+        "en": "Set 'Energy Pattern' to..."
       },
       "titleFormatted": {
-        "en": "Set Energy Pattern to [[energyPattern]]"
+        "en": "Set 'Energy Pattern' to [[energyPattern]]"
       },
       "args": [
         {
@@ -323,10 +323,10 @@
     {
       "id": "set_time_of_use_action",
       "title": {
-        "en": "Set Time Of Use active at..."
+        "en": "Set 'Time Of Use' active at..."
       },
       "titleFormatted": {
-        "en": "Set Time Of Use active at [[days]]"
+        "en": "Set 'Time Of Use' active at [[days]]"
       },
       "hint": {
         "en": "If select 'Never' all other selections will be dismissed, and TOU turned off."
@@ -355,10 +355,10 @@
     {
       "id": "set_time_use_settings",
       "title": { 
-        "en": "Set Time Of Use timeslot..."
+        "en": "Set 'Time Of Use' timeslot..."
       },
       "titleFormatted": {
-        "en": "Set Time Of Use for [[timeslot]] with Grid Charge [[onoff_grid]], Gen Charge [[onoff_gen]], Power [[power]]W and Battery to [[soc]]%"
+        "en": "Set 'Time Of Use' for [[timeslot]] with 'Grid Charge' [[onoff_grid]], 'Gen Charge' [[onoff_gen]], 'Power' [[power]]W and 'Battery' to [[soc]]%"
       },
       "hint": {
         "en": "Timeslot intervals can be set up through the official Deye app."
@@ -409,7 +409,7 @@
             "en": "Power"
           },
           "min": 0,
-          "max": 5000,
+          "max": 65000,
           "step": 1000
         },
         {
@@ -427,10 +427,10 @@
     {
       "id": "set_battery_grid_charge",
       "title": { 
-        "en": "Set Battery Grid Charge to..."
+        "en": "Set 'Battery Grid Charge' to..."
       },
       "titleFormatted": {
-        "en": "Set Battery Grid Charge to [[onoff]]"
+        "en": "Set 'Battery Grid Charge' to [[onoff]]"
       },
       "args": [
         {
@@ -449,10 +449,10 @@
     {
       "id": "set_battery_gen_charge",
       "title": { 
-        "en": "Set Battery Gen Charge to..."
+        "en": "Set 'Battery Gen Charge' to..."
       },
       "titleFormatted": {
-        "en": "Set Battery Gen Charge to [[onoff]]"
+        "en": "Set 'Battery Gen Charge' to [[onoff]]"
       },
       "args": [
         {
@@ -471,10 +471,10 @@
     {
       "id": "set_battery_max_discharge_current",
       "title": { 
-        "en": "Set Battery Max Discharge Current to..."
+        "en": "Set 'Battery Max Discharge Current' to..."
       },
       "titleFormatted": {
-        "en": "Set Battery Max Discharge Current to [[current]]A"
+        "en": "Set 'Battery Max Discharge Current' to [[current]]A"
       },
       "args": [
         {
@@ -492,10 +492,10 @@
     {
       "id": "set_battery_max_charge_current",
       "title": { 
-        "en": "Set Battery Max Charge Current to..."
+        "en": "Set 'Battery Max Charge Current' to..."
       },
       "titleFormatted": {
-        "en": "Set Battery Max Charge Current to [[current]]A"
+        "en": "Set 'Battery Max Charge Current' to [[current]]A"
       },
       "args": [
         {
@@ -513,10 +513,10 @@
     {
       "id": "set_battery_low",
       "title": { 
-        "en": "Set Battery Low to..."
+        "en": "Set 'Battery Low' to..."
       },
       "titleFormatted": {
-        "en": "Set Battery Low to [[percent]]%"
+        "en": "Set 'Battery Low' to [[percent]]%"
       },
       "args": [
         {
@@ -534,10 +534,10 @@
     {
       "id": "set_battery_grid_charge_current",
       "title": { 
-        "en": "Set Battery Grid Charge Current to..."
+        "en": "Set 'Battery Grid Charge Current' to..."
       },
       "titleFormatted": {
-        "en": "Set Battery Grid Charge Current to [[current]]A"
+        "en": "Set 'Battery Grid Charge Current' to [[current]]A"
       },
       "args": [
         {
