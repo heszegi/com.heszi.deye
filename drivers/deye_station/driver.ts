@@ -3,11 +3,19 @@
 import Homey from 'homey';
 import { PairSession } from 'homey/lib/Driver';
 import DeyeApp from '../../app';
-import { DATA_CENTER, ENERGY_PATTERN, IDeyeToken, ON_OFF, WORK_MODE } from '../../lib/deye_api';
+import { DATA_CENTER, IDeyeToken } from '../../lib/deye_api';
+import DeyeStationInverter from './devices/deyeStationInverter';
+import DeyeStationBattery from './devices/deyeStationBattery';
+import DeyeStationSolarpanel from './devices/deyeStationSolarpanel';
 import DeyeStationDevice from './device';
 
+enum DeviceType {
+  INVERTER = 'inverter',
+  BATTERY = 'battery',
+  SOLARPANEL = 'solarpanel',
+}
+
 export default class DeyeStationDriver extends Homey.Driver {
-  stationDataUpdated_card!: Homey.FlowCardTriggerDevice; // deprecated @v1.2.2
   measuredDataUpdated_card!: Homey.FlowCardTriggerDevice;
   dailyDataUpdated_card!: Homey.FlowCardTriggerDevice;
 
@@ -35,8 +43,6 @@ export default class DeyeStationDriver extends Homey.Driver {
     this.registerCapabiltyAction('set_battery_max_charge_current', 'setBatteryMaxChargeCurrent', 'current');
     this.registerCapabiltyAction('set_battery_low', 'setBatteryLow', 'percent');
     this.registerCapabiltyAction('set_battery_grid_charge_current', 'setBatteryGridChargeCurrent', 'current');
-
-    this.stationDataUpdated_card = this.homey.flow.getDeviceTriggerCard('station_data_updated'); // deprecated @v1.2.2
     
     this.measuredDataUpdated_card = this.homey.flow.getDeviceTriggerCard('measured_data_updated');
     this.dailyDataUpdated_card = this.homey.flow.getDeviceTriggerCard('daily_data_updated');
@@ -65,19 +71,23 @@ export default class DeyeStationDriver extends Homey.Driver {
       try{
         const stations = await (this.homey.app as DeyeApp).api.getStationsWithDevice(dataCenter, token);
 
-        return stations.map((station) => {
-          return {
-            name: this.homey.__('stationName', {id: station.id}),
-            data: {
-              id: station.id,
-            },
-            settings: {
-              dataCenter,
-              token,
-              station
-            },
-          };
-        });
+        return stations.map(station => [
+          {
+            name: this.homey.__('inverterName', {id: station.id}),
+            data: { id: station.id }, // type is undefined for inverter because of backward compatibility
+            settings: { dataCenter, token, station }
+          }, 
+          {
+            name: this.homey.__('bateryName', {id: station.id}),
+            data: { id: station.id, type: DeviceType.BATTERY },
+            settings: { inverter: station.id }
+          }, 
+          {
+            name: this.homey.__('solarpanelName', {id: station.id}),
+            data: { id: station.id, type: DeviceType.SOLARPANEL },
+            settings: { inverter: station.id }
+          }
+        ]).flat();
       }catch(err){
         this.log('Pair list devices error: ', err);
         return []
@@ -85,13 +95,14 @@ export default class DeyeStationDriver extends Homey.Driver {
     });
   }
 
-  public async onRepair(session: PairSession, device: DeyeStationDevice): Promise<void> {
+  async onRepair(session: PairSession, device: DeyeStationDevice): Promise<void> {
+    const inverter = this.getDeviceByType<DeyeStationInverter>(device.getData().id, DeviceType.INVERTER);
 
     session.setHandler('login', async (data: {username: string, password: string}) => {
       try {
-        const settings = device.getSettings();
+        const settings = inverter.getSettings();
         const token = await (this.homey.app as DeyeApp).api.login(settings.dataCenter, data.username, data.password);
-        device.setSettings({
+        inverter.setSettings({
           ...settings,
           token
         });
@@ -104,16 +115,16 @@ export default class DeyeStationDriver extends Homey.Driver {
 
     session.setHandler('update', async () => {
       try {
-        const settings = device.getSettings();
+        const settings = inverter.getSettings();
         const stations = await (this.homey.app as DeyeApp).api.getStationsWithDevice(settings.dataCenter, settings.token);
         const station = stations.filter( station => station.id === settings.station.id)[0];
 
         if(station){
-          device.setSettings({
+          inverter.setSettings({
             settings,
             station
           });
-          device.onInit();
+          inverter.onInit();
           return 'updated';
         } else {
           this.log('Repair update station error: ', 'not_found');
@@ -128,9 +139,38 @@ export default class DeyeStationDriver extends Homey.Driver {
     return Promise.resolve()
   }
 
+  onMapDeviceClass( device: DeyeStationDevice ) {
+    switch (device.getData().type) {
+      case DeviceType.BATTERY:
+        return DeyeStationBattery;
+      case DeviceType.SOLARPANEL:
+        return DeyeStationSolarpanel;
+      default:
+        return DeyeStationInverter;
+    }
+  }
+
+  getDeviceByType<T = DeyeStationDevice>(inverterId: string, type: DeviceType): T {
+    type = (type === DeviceType.INVERTER ? undefined : type) as DeviceType;
+    const device = this.getDevices()
+      .filter( d => d.getData().id === inverterId && d.getData().type === type)[0];
+
+    return device as T;
+  }
+
+  updateChildDevices(device: DeyeStationInverter) {
+    this.getDeviceByType<DeyeStationBattery>(device.getData().id, DeviceType.BATTERY)?.setCapabilitiyValues(device);
+    this.getDeviceByType<DeyeStationSolarpanel>(device.getData().id, DeviceType.SOLARPANEL)?.setCapabilitiyValues(device);
+  }
+
+  disableChildDevices(device: DeyeStationInverter) {
+    this.getDeviceByType<DeyeStationBattery>(device.getData().id, DeviceType.BATTERY)?.setUnavailable(this.homey.__('device.inverter_removed'));
+    this.getDeviceByType<DeyeStationSolarpanel>(device.getData().id, DeviceType.SOLARPANEL)?.setUnavailable(this.homey.__('device.inverter_removed'));
+  }
+
   registerCapabilityCondition(capability: string) {
     this.homey.flow.getConditionCard(capability).registerRunListener(async (args: any, state: any) => {
-      return (args.device as DeyeStationDevice).getCapabilityValue(capability);
+      return (args.device as DeyeStationInverter).getCapabilityValue(capability);
     });
   }
 

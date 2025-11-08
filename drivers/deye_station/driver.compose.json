@@ -2,27 +2,16 @@
   "name": {
     "en": "Deye Station"
   },
-  "class": "solarpanel",
+  "class": "other",
   "capabilities": [
-    "measure_battery",
-    "grid_available",
-    "grid_feeding",
-    "battery_charging",
-    "solar_production",
-    "measure_solar_power",
-    "measure_battery_power",
-    "measure_consumption_power",
-    "measure_grid_power",
-    "daily_production",
-    "daily_consumption",
-    "daily_sell",
-    "daily_buy",
     "inverter_sn",
     "owner",
     "address"
   ],
   "energy": {
-    "batteries": ["OTHER"]
+    "batteries": [
+      "OTHER"
+    ]
   },
   "platforms": [
     "local"
@@ -48,17 +37,29 @@
           "en": "Login to DeyeCloud"
         },
         "logo": "icon.svg",
-        "usernameLabel": { "en": "E-mail address" },
-        "usernamePlaceholder": { "en": "john@doe.com" },
-        "passwordLabel": { "en": "Password" },
-        "passwordPlaceholder": { "en": "Password" }
+        "usernameLabel": {
+          "en": "E-mail address"
+        },
+        "usernamePlaceholder": {
+          "en": "john@doe.com"
+        },
+        "passwordLabel": {
+          "en": "Password"
+        },
+        "passwordPlaceholder": {
+          "en": "Password"
+        }
       }
     },
     {
       "id": "list_devices",
       "template": "list_devices",
-      "navigation": { "next": "add_devices" },
-      "options": { "singular": true }
+      "navigation": {
+        "next": "add_devices"
+      },
+      "options": {
+        "singular": false
+      }
     },
     {
       "id": "add_devices",
@@ -74,10 +75,18 @@
           "en": "Login to DeyeCloud"
         },
         "logo": "icon.svg",
-        "usernameLabel": { "en": "E-mail address" },
-        "usernamePlaceholder": { "en": "john@doe.com" },
-        "passwordLabel": { "en": "Password" },
-        "passwordPlaceholder": { "en": "Password" }
+        "usernameLabel": {
+          "en": "E-mail address"
+        },
+        "usernamePlaceholder": {
+          "en": "john@doe.com"
+        },
+        "passwordLabel": {
+          "en": "Password"
+        },
+        "passwordPlaceholder": {
+          "en": "Password"
+        }
       }
     },
     {

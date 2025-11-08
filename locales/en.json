@@ -1,5 +1,7 @@
 {
-    "stationName": "Deye Station __id__",
+    "inverterName": "Deye Inverter __id__",
+    "bateryName": "Deye Battery __id__",
+    "solarpanelName": "Deye Solar panel __id__",
     "pair": {
         "datacenter": {
             "title": "Select Data Center",
@@ -16,6 +18,20 @@
             "not_found": "Station not found! Try to delete device and re add it!",
             "error": "Error during update station data! Try again.",
             "done": "Done"
+        }
+    },
+    "device": {
+        "inverter_removed": "Connected inverter removed from station, device unavailable!",
+        "solarpanel": {
+            "measure_power": "Power from panels",
+            "meter_power": "Daly production"
+        },
+        "battery": {
+            "measure_power": "Charging power",
+            "meter_power": {
+                "charged": "Charged Energy",
+                "discharged": "Discharged Energy"
+            }
         }
     }
 }

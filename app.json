@@ -41,98 +41,6 @@
   "flow": {
     "triggers": [
       {
-        "id": "station_data_updated",
-        "highlight": true,
-        "title": {
-          "en": "Station data updated"
-        },
-        "deprecated": true,
-        "hint": {
-          "en": "This trigger card is deprecated! Please use 'Measured data updated' or 'Daily data updated' trigger cards instead."
-        },
-        "tokens": [
-          {
-            "name": "measure_battery",
-            "title": {
-              "en": "Battery charge"
-            },
-            "type": "number",
-            "example": 89
-          },
-          {
-            "name": "measure_battery_power",
-            "title": {
-              "en": "Power from battery"
-            },
-            "type": "number",
-            "example": 333
-          },
-          {
-            "name": "measure_consumption_power",
-            "title": {
-              "en": "Power consumption"
-            },
-            "type": "number",
-            "example": 277
-          },
-          {
-            "name": "measure_grid_power",
-            "title": {
-              "en": "Power from grid"
-            },
-            "type": "number",
-            "example": 7
-          },
-          {
-            "name": "measure_solar_power",
-            "title": {
-              "en": "Power from solar cells"
-            },
-            "type": "number",
-            "example": 1000
-          },
-          {
-            "name": "daily_production",
-            "title": {
-              "en": "Daily production"
-            },
-            "type": "number",
-            "example": 11.3
-          },
-          {
-            "name": "daily_consumption",
-            "title": {
-              "en": "Daily consumption"
-            },
-            "type": "number",
-            "example": 12.7
-          },
-          {
-            "name": "daily_sell",
-            "title": {
-              "en": "Daily energy sell"
-            },
-            "type": "number",
-            "example": 1.2
-          },
-          {
-            "name": "daily_buy",
-            "title": {
-              "en": "Daily energy buy"
-            },
-            "type": "number",
-            "example": 0
-          }
-        ],
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=deye_station"
-          }
-        ]
-      },
-      {
         "id": "measured_data_updated",
         "highlight": true,
         "title": {
@@ -174,7 +82,7 @@
           {
             "name": "measure_solar_power",
             "title": {
-              "en": "Power from solar cells"
+              "en": "Power from solar panels"
             },
             "type": "number",
             "example": 1000
@@ -184,7 +92,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           }
         ]
       },
@@ -235,7 +143,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           }
         ]
       },
@@ -251,7 +159,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           }
         ]
       },
@@ -267,7 +175,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           }
         ]
       },
@@ -276,6 +184,7 @@
         "title": {
           "en": "Power from the battery changed"
         },
+        "deprecated": true,
         "tokens": [
           {
             "name": "measure_battery_power",
@@ -299,6 +208,7 @@
         "title": {
           "en": "Power consumption of the house changed"
         },
+        "deprecated": true,
         "tokens": [
           {
             "name": "measure_consumption_power",
@@ -322,6 +232,7 @@
         "title": {
           "en": "Power used from the grid changed"
         },
+        "deprecated": true,
         "tokens": [
           {
             "name": "measure_grid_power",
@@ -343,13 +254,14 @@
       {
         "id": "measure_solar_power_changed",
         "title": {
-          "en": "Power from the solar cells changed"
+          "en": "Power from the solar panels changed"
         },
+        "deprecated": true,
         "tokens": [
           {
             "name": "measure_solar_power",
             "title": {
-              "en": "Power from the solar cells"
+              "en": "Power from the solar panels"
             },
             "type": "number",
             "example": 1000
@@ -377,7 +289,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           }
         ]
       },
@@ -390,7 +302,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           }
         ]
       },
@@ -403,7 +315,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           }
         ]
       },
@@ -416,7 +328,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           }
         ]
       }
@@ -434,7 +346,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           },
           {
             "type": "dropdown",
@@ -471,7 +383,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           },
           {
             "type": "dropdown",
@@ -514,7 +426,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           },
           {
             "type": "dropdown",
@@ -542,16 +454,16 @@
       {
         "id": "set_grid_peak_shaving",
         "title": {
-          "en": "Set Grid Peak Shaving..."
+          "en": "Set 'Grid Peak Shaving'..."
         },
         "titleFormatted": {
-          "en": "Set Grid Peak Shaving to [[onoff]] with [[power]]W"
+          "en": "Set 'Grid Peak Shaving' to [[onoff]] with [[power]]W"
         },
         "args": [
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           },
           {
             "type": "dropdown",
@@ -601,7 +513,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           },
           {
             "title": {
@@ -678,7 +590,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           },
           {
             "name": "timeslot",
@@ -802,7 +714,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           },
           {
             "type": "dropdown",
@@ -839,7 +751,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           },
           {
             "type": "dropdown",
@@ -876,7 +788,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           },
           {
             "type": "number",
@@ -902,7 +814,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           },
           {
             "type": "number",
@@ -928,7 +840,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           },
           {
             "type": "number",
@@ -954,7 +866,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=deye_station"
+            "filter": "driver_id=deye_station&class=other"
           },
           {
             "type": "number",
@@ -975,21 +887,8 @@
       "name": {
         "en": "Deye Station"
       },
-      "class": "solarpanel",
+      "class": "other",
       "capabilities": [
-        "measure_battery",
-        "grid_available",
-        "grid_feeding",
-        "battery_charging",
-        "solar_production",
-        "measure_solar_power",
-        "measure_battery_power",
-        "measure_consumption_power",
-        "measure_grid_power",
-        "daily_production",
-        "daily_consumption",
-        "daily_sell",
-        "daily_buy",
         "inverter_sn",
         "owner",
         "address"
@@ -1044,7 +943,7 @@
             "next": "add_devices"
           },
           "options": {
-            "singular": true
+            "singular": false
           }
         },
         {
@@ -1342,14 +1241,14 @@
     "measure_solar_power": {
       "type": "number",
       "title": {
-        "en": "Power from solar cells"
+        "en": "Power from panels"
       },
       "units": {
         "en": "W"
       },
       "insights": true,
       "desc": {
-        "en": "Power from the solar cells in watt (W)"
+        "en": "Power from the solar panels in watt (W)"
       },
       "chartType": "stepLine",
       "decimals": 2,
@@ -1381,20 +1280,6 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/drivers/deye_station/assets/solar_production.svg"
-    },
-    "solar_sell": {
-      "type": "boolean",
-      "title": {
-        "en": "Solar Sell"
-      },
-      "desc": {
-        "en": "When this item is active, the surplus energy can be sold back to grid."
-      },
-      "insights": false,
-      "getable": true,
-      "setable": true,
-      "uiComponent": "button",
-      "icon": "/drivers/deye_station/assets/grid_feeding.svg"
     }
   }
 }

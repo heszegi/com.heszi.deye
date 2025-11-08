@@ -1,9 +1,9 @@
 {
     "type": "number",
-    "title": { "en": "Power from solar cells" },
+    "title": { "en": "Power from panels" },
     "units": { "en": "W" },
     "insights": true,
-    "desc": { "en": "Power from the solar cells in watt (W)" },
+    "desc": { "en": "Power from the solar panels in watt (W)" },
     "chartType": "stepLine",
     "decimals": 2,
     "getable": true,

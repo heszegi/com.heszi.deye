@@ -1,74 +1,10 @@
 {
   "triggers": [
     {
-      "id": "station_data_updated",
-      "highlight": true,
-      "title": { "en": "Station data updated" },
-      "deprecated": true,
-      "hint": {
-        "en": "This trigger card is deprecated! Please use 'Measured data updated' or 'Daily data updated' trigger cards instead."
-      },
-      "tokens": [
-        {
-          "name": "measure_battery",
-          "title": { "en": "Battery charge" },
-          "type": "number",
-          "example": 89
-        },
-        {
-          "name": "measure_battery_power",
-          "title": { "en": "Power from battery" },
-          "type": "number",
-          "example": 333
-        },
-        {
-          "name": "measure_consumption_power",
-          "title": { "en": "Power consumption" },
-          "type": "number",
-          "example": 277
-        },
-        {
-          "name": "measure_grid_power",
-          "title": { "en": "Power from grid" },
-          "type": "number",
-          "example": 7
-        },
-        {
-          "name": "measure_solar_power",
-          "title": { "en": "Power from solar cells" },
-          "type": "number",
-          "example": 1000
-        },
-        {
-          "name": "daily_production",
-          "title": { "en": "Daily production" },
-          "type": "number",
-          "example": 11.3
-        },
-        {
-          "name": "daily_consumption",
-          "title": { "en": "Daily consumption" },
-          "type": "number",
-          "example": 12.7
-        },
-        {
-          "name": "daily_sell",
-          "title": { "en": "Daily energy sell" },
-          "type": "number",
-          "example": 1.2
-        },
-        {
-          "name": "daily_buy",
-          "title": { "en": "Daily energy buy" },
-          "type": "number",
-          "example": 0
-        }
-      ]
-    },
-    {
       "id": "measured_data_updated",
       "highlight": true,
       "title": { "en": "Measured data updated" },
+      "$filter": "class=other",
       "tokens": [
         {
           "name": "measure_battery",
@@ -96,7 +32,7 @@
         },
         {
           "name": "measure_solar_power",
-          "title": { "en": "Power from solar cells" },
+          "title": { "en": "Power from solar panels" },
           "type": "number",
           "example": 1000
         }
@@ -106,6 +42,7 @@
       "id": "daily_data_updated",
       "highlight": true,
       "title": { "en": "Daily data updated" },
+      "$filter": "class=other",
       "hint": {
         "en": "Only available if data source is set to 'Device'!"
       },
@@ -139,6 +76,7 @@
     {
       "id": "grid_available_true",
       "title": { "en": "Grid available" },
+      "$filter": "class=other",
       "hint": {
         "en": "Only available if data source is set to 'Device'!"
       }
@@ -146,6 +84,7 @@
     {
       "id": "grid_available_false",
       "title": { "en": "Grid unavailable" },
+      "$filter": "class=other",
       "hint": {
         "en": "Only available if data source is set to 'Device'!"
       }
@@ -153,6 +92,7 @@
     {
       "id": "measure_battery_power_changed",
       "title": { "en": "Power from the battery changed" },
+      "deprecated": true,
       "tokens": [
         {
           "name": "measure_battery_power",
@@ -165,6 +105,7 @@
     {
       "id": "measure_consumption_power_changed",
       "title": { "en": "Power consumption of the house changed" },
+      "deprecated": true,
       "tokens": [
         {
           "name": "measure_consumption_power",
@@ -177,6 +118,7 @@
     {
       "id": "measure_grid_power_changed",
       "title": { "en": "Power used from the grid changed" },
+      "deprecated": true,
       "tokens": [
         {
           "name": "measure_grid_power",
@@ -188,11 +130,12 @@
     },
     {
       "id": "measure_solar_power_changed",
-      "title": { "en": "Power from the solar cells changed" },
+      "title": { "en": "Power from the solar panels changed" },
+      "deprecated": true,
       "tokens": [
         {
           "name": "measure_solar_power",
-          "title": { "en": "Power from the solar cells" },
+          "title": { "en": "Power from the solar panels" },
           "type": "number",
           "example": 1000
         }
@@ -203,26 +146,31 @@
     {
       "id": "grid_available",
       "title": { "en": "Grid !{{available|unavailable}}" },
+      "$filter": "class=other",
       "hint": {
         "en": "Only available if data source is set to 'Device'!"
       }
     },
     {
       "id": "battery_charging",
-      "title": { "en": "!{{Battery|Battery not}} charging"}
+      "title": { "en": "!{{Battery|Battery not}} charging"},
+      "$filter": "class=other"
     },
     {
       "id": "grid_feeding",
-      "title": { "en": "!{{Feeding|Not feeding}} the grid"}
+      "title": { "en": "!{{Feeding|Not feeding}} the grid"},
+      "$filter": "class=other"
     },
     {
       "id": "solar_production",
-      "title": { "en": "Solar power !{{available|unavailable}}" }
+      "title": { "en": "Solar power !{{available|unavailable}}" },
+      "$filter": "class=other"
     }
   ],
   "actions": [
     {
       "id": "set_solar_sell",
+      "$filter": "class=other",
       "title": { 
         "en": "Set 'Solar Sell' to..."
       },
@@ -245,6 +193,7 @@
     },
     {
       "id": "set_work_mode",
+      "$filter": "class=other",
       "title": { 
         "en": "Set 'Work Mode' to..."
       },
@@ -268,6 +217,7 @@
     },
     {
       "id": "set_energy_pattern",
+      "$filter": "class=other",
       "title": { 
         "en": "Set 'Energy Pattern' to..."
       },
@@ -290,11 +240,12 @@
     },
     {
       "id": "set_grid_peak_shaving",
+      "$filter": "class=other",
       "title": { 
-        "en": "Set Grid Peak Shaving..."
+        "en": "Set 'Grid Peak Shaving'..."
       },
       "titleFormatted": {
-        "en": "Set Grid Peak Shaving to [[onoff]] with [[power]]W"
+        "en": "Set 'Grid Peak Shaving' to [[onoff]] with [[power]]W"
       },
       "args": [
         {
@@ -322,6 +273,7 @@
     },
     {
       "id": "set_time_of_use_action",
+      "$filter": "class=other",
       "title": {
         "en": "Set 'Time Of Use' active at..."
       },
@@ -354,6 +306,7 @@
     },
     {
       "id": "set_time_use_settings",
+      "$filter": "class=other",
       "title": { 
         "en": "Set 'Time Of Use' timeslot..."
       },
@@ -426,6 +379,7 @@
     },
     {
       "id": "set_battery_grid_charge",
+      "$filter": "class=other",
       "title": { 
         "en": "Set 'Battery Grid Charge' to..."
       },
@@ -448,6 +402,7 @@
     },
     {
       "id": "set_battery_gen_charge",
+      "$filter": "class=other",
       "title": { 
         "en": "Set 'Battery Gen Charge' to..."
       },
@@ -470,6 +425,7 @@
     },
     {
       "id": "set_battery_max_discharge_current",
+      "$filter": "class=other",
       "title": { 
         "en": "Set 'Battery Max Discharge Current' to..."
       },
@@ -491,6 +447,7 @@
     },
     {
       "id": "set_battery_max_charge_current",
+      "$filter": "class=other",
       "title": { 
         "en": "Set 'Battery Max Charge Current' to..."
       },
@@ -512,6 +469,7 @@
     },
     {
       "id": "set_battery_low",
+      "$filter": "class=other",
       "title": { 
         "en": "Set 'Battery Low' to..."
       },
@@ -533,6 +491,7 @@
     },
     {
       "id": "set_battery_grid_charge_current",
+      "$filter": "class=other",
       "title": { 
         "en": "Set 'Battery Grid Charge Current' to..."
       },
