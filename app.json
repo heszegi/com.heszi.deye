@@ -64,6 +64,14 @@
             "example": 333
           },
           {
+            "name": "measure_battery_temperature",
+            "title": {
+              "en": "Battery temperature"
+            },
+            "type": "number",
+            "example": 19
+          },
+          {
             "name": "measure_consumption_power",
             "title": {
               "en": "Power consumption"
@@ -86,6 +94,14 @@
             },
             "type": "number",
             "example": 1000
+          },
+          {
+            "name": "rawJSON",
+            "title": {
+              "en": "Raw JSON data"
+            },
+            "type": "string",
+            "example": "{\"batteryPower\":333,\"consumptionPower\":277,\"wirePower\":7,\"generationPower\":1000}"
           }
         ],
         "args": [
@@ -889,9 +905,7 @@
       },
       "class": "other",
       "capabilities": [
-        "inverter_sn",
-        "owner",
-        "address"
+        "inverter_sn"
       ],
       "energy": {
         "batteries": [
@@ -1061,7 +1075,13 @@
       "desc": {
         "en": "True when the battery is charging"
       },
-      "insights": false,
+      "preventInsights": false,
+      "insightsTitleTrue": {
+        "en": "Battery is charging"
+      },
+      "insightsTitleFalse": {
+        "en": "Battery is not charging"
+      },
       "getable": true,
       "setable": false,
       "uiComponent": "sensor",
@@ -1151,7 +1171,13 @@
       "desc": {
         "en": "True when grid is available."
       },
-      "insights": false,
+      "preventInsights": false,
+      "insightsTitleTrue": {
+        "en": "Grid available"
+      },
+      "insightsTitleFalse": {
+        "en": "Grid not available"
+      },
       "getable": true,
       "setable": false,
       "uiComponent": "sensor",
@@ -1165,7 +1191,13 @@
       "desc": {
         "en": "True when power uploading to the grid."
       },
-      "insights": false,
+      "preventInsights": false,
+      "insightsTitleTrue": {
+        "en": "Feeding the grid"
+      },
+      "insightsTitleFalse": {
+        "en": "Not feeding the grid"
+      },
       "getable": true,
       "setable": false,
       "uiComponent": "sensor",
@@ -1199,6 +1231,25 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/drivers/deye_station/assets/battery_power.svg"
+    },
+    "measure_battery_temperature": {
+      "type": "number",
+      "title": {
+        "en": "Battery temperature"
+      },
+      "units": {
+        "en": "°C"
+      },
+      "insights": true,
+      "desc": {
+        "en": "The temperature of the battery."
+      },
+      "chartType": "stepLine",
+      "decimals": 2,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/battery_temperature.svg"
     },
     "measure_consumption_power": {
       "type": "number",
@@ -1275,7 +1326,13 @@
       "desc": {
         "en": "True when solar power produced"
       },
-      "insights": false,
+      "preventInsights": false,
+      "insightsTitleTrue": {
+        "en": "Solar power is being produced"
+      },
+      "insightsTitleFalse": {
+        "en": "Solar power is not being produced"
+      },
       "getable": true,
       "setable": false,
       "uiComponent": "sensor",

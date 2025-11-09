@@ -1,10 +1,7 @@
-'use strict';
-
-import Homey from 'homey';
 import DeyeApp from '../../../app';
 import { BATTERY_MODE_CONTROL, BATTERY_PARAMETER, DATA_CENTER, DAYS_OF_WEEK, ENERGY_PATTERN, IDeyeDeviceLatestData, IDeyeDeviceLatestKeyValue, IDeyeStationLatestData, IDeyeStationWithDevice, IDeyeToken, ON_OFF, WORK_MODE } from '../../../lib/deye_api';
-import DeyeStationDriver from '../driver';
 import DeyeStationDevice, { ICapabilityList } from '../device';
+import { IKeyValue } from '../driver';
 
 export enum LatestDataSource {
   STATION = 'station',
@@ -17,9 +14,11 @@ export interface ILatestData {
   dataTokens: {
     measure_battery: number;
     measure_battery_power: number;
+    measure_battery_temperature: number;
     measure_consumption_power: number;
     measure_grid_power: number;
     measure_solar_power: number;
+    rawJSON: string;
   },
   dailyTokens?: {
     daily_production: number;
@@ -39,7 +38,6 @@ export default class DeyeStationInverter extends DeyeStationDevice {
   api = (this.homey.app as DeyeApp).api;
   apiError = 0;
 
-  driver!: DeyeStationDriver;
   dataCenter!: DATA_CENTER;
   token!: IDeyeToken;
   station!: IDeyeStationWithDevice;
@@ -50,7 +48,7 @@ export default class DeyeStationInverter extends DeyeStationDevice {
   polling?: NodeJS.Timeout;
 
   override async onInit() {
-    this.log('DeyeStationInverter has been initialized', this.getName());
+    super.onInit();
 
     this.dataCenter = this.getSetting('dataCenter');
     this.token = this.getSetting('token');
@@ -67,15 +65,18 @@ export default class DeyeStationInverter extends DeyeStationDevice {
         { id: 'battery_charging' },
         { id: 'measure_battery' },
         { id: 'measure_battery_power' },
+        { id: 'measure_battery_temperature' },
         { id: 'measure_solar_power' },
         { id: 'measure_consumption_power' },
-        { id: 'measure_grid_power' }
+        { id: 'measure_grid_power' },
+        { id: 'owner' },
+        { id: 'address' },
       ]
     );
     await this.updateCapabilites();
 
     const validateStringValues = (value: any): string => {
-      return value.toString() === value ? value : 'Invalid value!';
+      return value.toString() === value ? value : this.homey.__('device.inverter.unknown_value');
     }
 
     this.setAvailableCapabilityValue('address', validateStringValues(this.station.locationAddress));
@@ -84,19 +85,19 @@ export default class DeyeStationInverter extends DeyeStationDevice {
     if(this.station.deviceTotal > 0 && this.station.deviceListItems.length){
       this.setAvailableCapabilityValue('inverter_sn', validateStringValues(this.station.deviceListItems[0].deviceSn));
     }else{
-      this.setAvailableCapabilityValue('inverter_sn', 'No device found!');
+      this.setAvailableCapabilityValue('inverter_sn', this.homey.__('device.inverter.no_device_sn'));
     }
 
     this.pollLatest();
   }
 
-  override async onSettings({oldSettings, newSettings, changedKeys}: { oldSettings: { [key: string]: boolean | string | number | undefined | null }; newSettings: { [key: string]: boolean | string | number | undefined | null }; changedKeys: string[]; }): Promise<string | void> {
-    this.log("DeyeStationInverter settings where changed");
+  override async onSettings({oldSettings, newSettings, changedKeys}: { oldSettings: IKeyValue; newSettings: IKeyValue; changedKeys: IKeyValue; }): Promise<string | void> {
+    super.onSettings({oldSettings, newSettings, changedKeys});
 
     this.normalPollInterval = newSettings.normalPollInterval as number;
     this.minimumPollInterval = newSettings.minimumPollInterval as number;
     this.latestDataSource = newSettings.latestDataSource as LatestDataSource;
-
+    
     this.updateCapabilites();
     this.pollLatest();
   }
@@ -148,7 +149,7 @@ export default class DeyeStationInverter extends DeyeStationDevice {
         this.log('Reached max number of API call tries!');
       }
       
-      this.setUnavailable();
+      this.setUnavailable(this.homey.__('device.inverter.max_retries_reached'));
       return;
     }
 
@@ -212,9 +213,11 @@ export default class DeyeStationInverter extends DeyeStationDevice {
       dataTokens: {
         measure_battery: getDeviceLatestKeyValue(data, "SOC").value,
         measure_battery_power: getDeviceLatestKeyValue(data, "BatteryPower").value,
+        measure_battery_temperature: getDeviceLatestKeyValue(data, "Temperature- Battery").value,
         measure_consumption_power: getDeviceLatestKeyValue(data, "TotalConsumptionPower").value,
         measure_grid_power: getDeviceLatestKeyValue(data, "TotalGridPower").value,
         measure_solar_power: getDeviceLatestKeyValue(data, "TotalSolarPower").value,
+        rawJSON: JSON.stringify(data)
       },
       dailyTokens: {
         daily_production: getDeviceLatestKeyValue(data, "DailyActiveProduction").value,

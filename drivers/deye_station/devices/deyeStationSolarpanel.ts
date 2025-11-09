@@ -1,23 +1,31 @@
 import DeyeStationInverter, { LatestDataSource } from './deyeStationInverter';
-import DeyeStationDevice, { ICapabilityList } from '../device';
+import DeyeStationDevice from '../device';
 
 export default class DeyeStationSolarpanel extends DeyeStationDevice {
 
   override async onInit() {
-    this.log('DeyeStationSolarpanel has been initialized');
+    super.onInit();
 
     await this.setClass('solarpanel');
     await this.setupCapabilites(
       [],
       [
-        {id: 'solar_production'},
-        {id: 'measure_power', title: this.homey.__('device.solarpanel.measure_power')},
-        {id: 'meter_power', title: this.homey.__('device.solarpanel.meter_power')}
+        { id: 'solar_production' },
+        { id: 'measure_power', options: { 
+          title: { en: this.homey.__('device.solarpanel.measure_power') },
+          icon: '/assets/solar_power.svg'
+        }},
+        { id: 'meter_power', options: { 
+          title: { en: this.homey.__('device.solarpanel.meter_power') },
+          icon: '/assets/daily_production.svg'
+        }}
       ]
     );
     await this.setEnergy({
       'meterPowerExportedCapability': 'meter_power'
     });
+
+    this.setUnavailable(this.homey.__('device.waiting_for_inverter'));
   }
   
   override setCapabilitiyValues(parent: DeyeStationInverter) {

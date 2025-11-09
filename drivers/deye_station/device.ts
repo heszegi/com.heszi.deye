@@ -1,58 +1,35 @@
 import Homey from 'homey';
 import DeyeStationInverter from './devices/deyeStationInverter';
+import DeyeStationDriver, { IKeyValue } from './driver';
 
 export interface ICapabilityList{
   id: string;
-  title?: string;
+  options?: IKeyValue;
 }
 
 export default class DeyeStationDevice extends Homey.Device {
-  /**
-   * onInit is called when the device is initialized.
-   */
+  driver!: DeyeStationDriver;
+
   async onInit() {
     this.log(`${this.constructor.name} has been initialized`);
+
+    this.driver.synchroniseCommonSettings(this);
   }
 
-  /**
-   * onAdded is called when the user adds the device, called just after pairing.
-   */
   async onAdded() {
     this.log(`${this.constructor.name} has been added`);
   }
 
-  /**
-   * onSettings is called when the user updates the device's settings.
-   * @param {object} event the onSettings event data
-   * @param {object} event.oldSettings The old settings object
-   * @param {object} event.newSettings The new settings object
-   * @param {string[]} event.changedKeys An array of keys changed since the previous version
-   * @returns {Promise<string|void>} return a custom message that will be displayed
-   */
-  async onSettings({
-    oldSettings,
-    newSettings,
-    changedKeys,
-  }: {
-    oldSettings: { [key: string]: boolean | string | number | undefined | null };
-    newSettings: { [key: string]: boolean | string | number | undefined | null };
-    changedKeys: string[];
-  }): Promise<string | void> {
-    this.log(`${this.constructor.name} settings where changed`);
+  async onSettings({ oldSettings, newSettings, changedKeys }: { oldSettings: IKeyValue; newSettings: IKeyValue; changedKeys: IKeyValue; }): Promise<string | void> {
+    this.log(`${this.constructor.name} settings have been changed`);
+
+    this.driver.synchroniseCommonSettings(this, newSettings);
   }
 
-  /**
-   * onRenamed is called when the user updates the device's name.
-   * This method can be used this to synchronise the name to the device.
-   * @param {string} name The new name
-   */
   async onRenamed(name: string) {
     this.log(`${this.constructor.name} was renamed`);
   }
 
-  /**
-   * onDeleted is called when the user deleted the device.
-   */
   async onDeleted() {
     this.log(`${this.constructor.name} has been deleted`);
   }
@@ -65,19 +42,14 @@ export default class DeyeStationDevice extends Homey.Device {
     for (const cap of add){
       if (!this.hasCapability(cap.id)){
         await this.addCapability(cap.id);
-
-        if(cap.title){
-          await this.setCapabilityOptions(cap.id, { title: { en: cap.title } });
-        }
+        if(cap.options) await this.setCapabilityOptions(cap.id, cap.options);
       }
     }
   }
 
-  setCapabilitiyValues(parent: DeyeStationInverter) {
+  setCapabilitiyValues(parent: DeyeStationInverter) { // Only for child devices (battery, solarpanel)
     if(!this.getAvailable()) this.setAvailable();
 
-    this.setAvailableCapabilityValue('address', parent.getCapabilityValue('address'));
-    this.setAvailableCapabilityValue('owner', parent.getCapabilityValue('owner'));
     this.setAvailableCapabilityValue('inverter_sn', parent.getCapabilityValue('inverter_sn'));
   }
 

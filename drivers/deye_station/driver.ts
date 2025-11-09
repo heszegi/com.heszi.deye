@@ -1,5 +1,3 @@
-'use strict';
-
 import Homey from 'homey';
 import { PairSession } from 'homey/lib/Driver';
 import DeyeApp from '../../app';
@@ -15,6 +13,9 @@ enum DeviceType {
   SOLARPANEL = 'solarpanel',
 }
 
+export interface IKeyValue { 
+  [key: string]: any
+};
 export default class DeyeStationDriver extends Homey.Driver {
   measuredDataUpdated_card!: Homey.FlowCardTriggerDevice;
   dailyDataUpdated_card!: Homey.FlowCardTriggerDevice;
@@ -80,12 +81,12 @@ export default class DeyeStationDriver extends Homey.Driver {
           {
             name: this.homey.__('bateryName', {id: station.id}),
             data: { id: station.id, type: DeviceType.BATTERY },
-            settings: { inverter: station.id }
+            icon: 'battery.svg'
           }, 
           {
             name: this.homey.__('solarpanelName', {id: station.id}),
             data: { id: station.id, type: DeviceType.SOLARPANEL },
-            settings: { inverter: station.id }
+            icon: 'solar_panel.svg'
           }
         ]).flat();
       }catch(err){
@@ -152,10 +153,7 @@ export default class DeyeStationDriver extends Homey.Driver {
 
   getDeviceByType<T = DeyeStationDevice>(inverterId: string, type: DeviceType): T {
     type = (type === DeviceType.INVERTER ? undefined : type) as DeviceType;
-    const device = this.getDevices()
-      .filter( d => d.getData().id === inverterId && d.getData().type === type)[0];
-
-    return device as T;
+    return this.getDevices().filter( d => d.getData().id === inverterId && d.getData().type === type)[0] as T;
   }
 
   updateChildDevices(device: DeyeStationInverter) {
@@ -166,6 +164,33 @@ export default class DeyeStationDriver extends Homey.Driver {
   disableChildDevices(device: DeyeStationInverter) {
     this.getDeviceByType<DeyeStationBattery>(device.getData().id, DeviceType.BATTERY)?.setUnavailable(this.homey.__('device.inverter_removed'));
     this.getDeviceByType<DeyeStationSolarpanel>(device.getData().id, DeviceType.SOLARPANEL)?.setUnavailable(this.homey.__('device.inverter_removed'));
+  }
+
+  synchroniseCommonSettings(device: DeyeStationDevice, settings?: IKeyValue) {
+    const commonSettingKeys = ['latestDataSource', 'normalPollInterval', 'minimumPollInterval'];
+
+    const inverter = this.getDeviceByType<DeyeStationInverter>(device.getData().id, DeviceType.INVERTER);
+    const battery = this.getDeviceByType<DeyeStationInverter>(device.getData().id, DeviceType.BATTERY);
+    const solarpanel = this.getDeviceByType<DeyeStationInverter>(device.getData().id, DeviceType.SOLARPANEL);
+
+    if(!settings) settings = (inverter || device).getSettings() as IKeyValue;
+    
+    [inverter, battery, solarpanel].forEach(async d => {
+      if(d && d !== device){
+        const oldSettings = d.getSettings();
+        const changedSettings: IKeyValue = {};
+
+        commonSettingKeys.forEach(k => {
+          if(oldSettings[k] != settings[k]) changedSettings[k] = settings[k];
+        });
+
+        if(Object.keys(changedSettings).length > 0){
+          const newSettings = { ...oldSettings, ...changedSettings };
+          await d.setSettings(newSettings);
+          await d.onSettings({oldSettings, newSettings, changedKeys: Object.keys(changedSettings)});
+        }
+      }
+    });
   }
 
   registerCapabilityCondition(capability: string) {

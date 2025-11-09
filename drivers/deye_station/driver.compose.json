@@ -4,9 +4,7 @@
   },
   "class": "other",
   "capabilities": [
-    "inverter_sn",
-    "owner",
-    "address"
+    "inverter_sn"
   ],
   "energy": {
     "batteries": [

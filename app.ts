@@ -19,6 +19,9 @@ export default class DeyeApp extends Homey.App {
 
     this.updateNotes.forEach(note => {
       if (note.version === this.manifest.version) {
+        if(this.homey.settings.get('last_update_note') === note.version) return;
+
+        this.homey.settings.set('last_update_note', note.version);
         this.homey.notifications.createNotification({ 
           excerpt: `☀️ Deye Solar Systems (v${note.version}): ${note.changes}`,
         });

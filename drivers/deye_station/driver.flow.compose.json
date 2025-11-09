@@ -19,6 +19,12 @@
           "example": 333
         },
         {
+          "name": "measure_battery_temperature",
+          "title": { "en": "Battery temperature" },
+          "type": "number",
+          "example": 19
+        },
+        {
           "name": "measure_consumption_power",
           "title": { "en": "Power consumption" },
           "type": "number",
@@ -35,6 +41,12 @@
           "title": { "en": "Power from solar panels" },
           "type": "number",
           "example": 1000
+        },
+        {
+          "name": "rawJSON",
+          "title": { "en": "Raw JSON data" },
+          "type": "string",
+          "example": "{\"batteryPower\":333,\"consumptionPower\":277,\"wirePower\":7,\"generationPower\":1000}"
         }
       ]
     },

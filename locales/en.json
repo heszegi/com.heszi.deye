@@ -22,6 +22,12 @@
     },
     "device": {
         "inverter_removed": "Connected inverter removed from station, device unavailable!",
+        "waiting_for_inverter": "Waiting for inverter connection (usually next data update)...",
+        "inverter": {
+            "unknown_value": "Invalid value!",
+            "no_device_sn": "No device found!",
+            "max_retries_reached": "Maximum number of API call attempts reached! The system has tried to connect multiple times but has now hit the limit for allowed requests. Check your connection and API settings to avoid repeated failed attempts."
+        },
         "solarpanel": {
             "measure_power": "Power from panels",
             "meter_power": "Daly production"

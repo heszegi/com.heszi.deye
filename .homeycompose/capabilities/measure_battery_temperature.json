@@ -1,0 +1,13 @@
+{
+    "type": "number",
+    "title": { "en": "Battery temperature" },
+    "units": { "en": "°C" },
+    "insights": true,
+    "desc": { "en": "The temperature of the battery." },
+    "chartType": "stepLine",
+    "decimals": 2,
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "icon": "/drivers/deye_station/assets/battery_temperature.svg"
+  }
