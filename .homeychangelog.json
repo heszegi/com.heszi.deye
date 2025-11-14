@@ -64,5 +64,8 @@
   },
   "1.4.0": {
     "en": "Add support for Homey Energy! Two new devices (Battery and Solar Panel) are now available for Deye Station to update the Energy tab metrics. To add them, go to add New Device -> Deye Solar System app."
+  },
+  "1.4.1": {
+    "en": "Fix 'Invalid capability' error for better backward compatibility"
   }
 }
