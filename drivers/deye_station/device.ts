@@ -54,7 +54,7 @@ export default class DeyeStationDevice extends Homey.Device {
   }
 
   setAvailableCapabilityValue(capabilityId: string, value: any): Promise<void> {
-    if(this.hasCapability(capabilityId)) {
+    if(this.hasCapability(capabilityId) && value !== null && value !== undefined) {
       return this.setCapabilityValue(capabilityId, value);
     }
     return Promise.resolve();
