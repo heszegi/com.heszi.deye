@@ -67,5 +67,8 @@
   },
   "1.4.1": {
     "en": "Fix 'Invalid capability' error for better backward compatibility"
+  },
+  "1.4.2": {
+    "en": "Fix 'Time Of Use' timeslot period not updating via action flow card"
   }
 }
