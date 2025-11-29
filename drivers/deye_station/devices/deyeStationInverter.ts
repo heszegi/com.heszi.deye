@@ -272,12 +272,12 @@ export default class DeyeStationInverter extends DeyeStationDevice {
     return this.api.setTimeOufUseAction(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, action, days as DAYS_OF_WEEK[]);
   }
   
-  async setTimeUseSettingItems(timeslot: number[], onoff_grid: ON_OFF, onoff_gen: ON_OFF, power: number, soc: number) {
+  async setTimeUseSettingItems(timeslot: string[], onoff_grid: ON_OFF, onoff_gen: ON_OFF, power: number, soc: number) {
     const current = await this.api.getTimeOfUse(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn);
 
     timeslot.forEach(t => {
-      current.timeUseSettingItems[timeslot[t]] = {
-        ...current.timeUseSettingItems[timeslot[t]],
+      current.timeUseSettingItems[parseInt(t)] = {
+        ...current.timeUseSettingItems[parseInt(t)],
         enableGridCharge: onoff_grid === ON_OFF.ON,
         enableGeneration: onoff_gen === ON_OFF.ON,
         power,
