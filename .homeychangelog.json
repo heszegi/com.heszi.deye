@@ -70,5 +70,8 @@
   },
   "1.4.2": {
     "en": "Fix 'Time Of Use' timeslot period not updating via action flow card"
+  },
+  "1.4.3": {
+    "en": "Fix crash occurring when child devices become unavailable"
   }
 }
