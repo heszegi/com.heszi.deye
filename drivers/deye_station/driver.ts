@@ -157,8 +157,17 @@ export default class DeyeStationDriver extends Homey.Driver {
   }
 
   updateChildDevices(device: DeyeStationInverter) {
-    this.getDeviceByType<DeyeStationBattery>(device.getData().id, DeviceType.BATTERY)?.setCapabilitiyValues(device);
-    this.getDeviceByType<DeyeStationSolarpanel>(device.getData().id, DeviceType.SOLARPANEL)?.setCapabilitiyValues(device);
+    try {
+      this.getDeviceByType<DeyeStationBattery>(device.getData().id, DeviceType.BATTERY)?.setCapabilitiyValues(device);
+    } catch (error) {
+      this.log('Missing battery device for inverter: ', device.getData().id)
+    }
+
+    try {
+      this.getDeviceByType<DeyeStationSolarpanel>(device.getData().id, DeviceType.SOLARPANEL)?.setCapabilitiyValues(device);
+    } catch (error) {
+      this.log('Missing solarpanel device for inverter: ', device.getData().id)
+    }
   }
 
   disableChildDevices(device: DeyeStationInverter) {
