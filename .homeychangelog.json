@@ -73,5 +73,8 @@
   },
   "1.4.3": {
     "en": "Fix crash occurring when child devices become unavailable"
+  },
+  "1.4.4": {
+    "en": "Some code refactoring, updated error messages, and an improved app description."
   }
 }
