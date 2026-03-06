@@ -26,7 +26,7 @@
         "inverter": {
             "unknown_value": "Invalid value!",
             "no_device_sn": "No device found!",
-            "max_retries_reached": "Maximum number of API call attempts reached! The system has tried to connect multiple times but has now hit the limit for allowed requests. Check your connection and API settings to avoid repeated failed attempts."
+            "max_retries_reached": "Max API retry limit exceeded. The app stopped querying after multiple failed attempts. Verify your internet connection or renew your login via Repair."
         },
         "solarpanel": {
             "measure_power": "Power from panels",

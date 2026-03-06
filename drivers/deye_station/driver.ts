@@ -101,9 +101,9 @@ export default class DeyeStationDriver extends Homey.Driver {
 
     session.setHandler('login', async (data: {username: string, password: string}) => {
       try {
-        const settings = inverter.getSettings();
+        const settings = inverter?.getSettings();
         const token = await (this.homey.app as DeyeApp).api.login(settings.dataCenter, data.username, data.password);
-        inverter.setSettings({
+        inverter?.setSettings({
           ...settings,
           token
         });
@@ -116,16 +116,16 @@ export default class DeyeStationDriver extends Homey.Driver {
 
     session.setHandler('update', async () => {
       try {
-        const settings = inverter.getSettings();
+        const settings = inverter?.getSettings();
         const stations = await (this.homey.app as DeyeApp).api.getStationsWithDevice(settings.dataCenter, settings.token);
         const station = stations.filter( station => station.id === settings.station.id)[0];
 
         if(station){
-          inverter.setSettings({
+          inverter?.setSettings({
             settings,
             station
           });
-          inverter.onInit();
+          inverter?.onInit();
           return 'updated';
         } else {
           this.log('Repair update station error: ', 'not_found');
@@ -151,23 +151,15 @@ export default class DeyeStationDriver extends Homey.Driver {
     }
   }
 
-  getDeviceByType<T = DeyeStationDevice>(inverterId: string, type: DeviceType): T {
+  getDeviceByType<T = DeyeStationDevice>(inverterId: string, type: DeviceType): T | undefined {
     type = (type === DeviceType.INVERTER ? undefined : type) as DeviceType;
-    return this.getDevices().filter( d => d.getData().id === inverterId && d.getData().type === type)[0] as T;
+    const devices = this.getDevices().filter( d => d.getData().id === inverterId && d.getData().type === type)
+    return devices.length ? devices[0] as T : undefined;
   }
 
   updateChildDevices(device: DeyeStationInverter) {
-    try {
-      this.getDeviceByType<DeyeStationBattery>(device.getData().id, DeviceType.BATTERY)?.setCapabilitiyValues(device);
-    } catch (error) {
-      this.log('Missing battery device for inverter: ', device.getData().id)
-    }
-
-    try {
-      this.getDeviceByType<DeyeStationSolarpanel>(device.getData().id, DeviceType.SOLARPANEL)?.setCapabilitiyValues(device);
-    } catch (error) {
-      this.log('Missing solarpanel device for inverter: ', device.getData().id)
-    }
+    this.getDeviceByType<DeyeStationBattery>(device.getData().id, DeviceType.BATTERY)?.setCapabilitiyValues(device);
+    this.getDeviceByType<DeyeStationSolarpanel>(device.getData().id, DeviceType.SOLARPANEL)?.setCapabilitiyValues(device);
   }
 
   disableChildDevices(device: DeyeStationInverter) {

@@ -30,6 +30,13 @@
   "bugs": {
     "url": "https://github.com/heszegi/com.heszi.deye/issues"
   },
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "heszegi"
+      }
+    }
+  },
   "homepage": "https://heszi.com",
   "tags": {
     "en": [
