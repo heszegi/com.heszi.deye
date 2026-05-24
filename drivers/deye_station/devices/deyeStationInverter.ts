@@ -222,8 +222,8 @@ export default class DeyeStationInverter extends DeyeStationDevice {
       dailyTokens: {
         daily_production: getDeviceLatestKeyValue(data, "DailyActiveProduction").value,
         daily_consumption: getDeviceLatestKeyValue(data, "DailyConsumption").value,
-        daily_sell: getDeviceLatestKeyValue(data, "DailyEnergySell").value,
-        daily_buy: getDeviceLatestKeyValue(data, "DailyEnergyBuy").value,
+        daily_sell: getDeviceLatestKeyValue(data, "DailyGridFeedIn").value,
+        daily_buy: getDeviceLatestKeyValue(data, "DailyEnergyPurchased").value,
         daily_charge: getDeviceLatestKeyValue(data, "DailyChargingEnergy").value,
         daily_discharge: getDeviceLatestKeyValue(data, "DailyDischargingEnergy").value
       }

@@ -363,7 +363,7 @@
       {
         "id": "set_max_sell_power",
         "title": {
-          "en": "Set 'Max Sell Power' to..."
+          "en": "Set Work Mode 'Max Sell Power' to..."
         },
         "titleFormatted": {
           "en": "Set 'Max Sell Power' to [[power]]W"
