@@ -361,6 +361,32 @@
     ],
     "actions": [
       {
+        "id": "set_max_sell_power",
+        "title": {
+          "en": "Set 'Max Sell Power' to..."
+        },
+        "titleFormatted": {
+          "en": "Set 'Max Sell Power' to [[power]]W"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=deye_station&class=other"
+          },
+          {
+            "type": "number",
+            "name": "power",
+            "title": {
+              "en": "Power"
+            },
+            "min": 0,
+            "max": 65000,
+            "step": 1000
+          }
+        ]
+      },
+      {
         "id": "set_solar_sell",
         "title": {
           "en": "Set 'Solar Sell' to..."

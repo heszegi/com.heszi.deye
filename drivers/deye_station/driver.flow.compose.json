@@ -181,6 +181,28 @@
   ],
   "actions": [
     {
+      "id": "set_max_sell_power",
+      "$filter": "class=other",
+      "title": { 
+        "en": "Set Work Mode 'Max Sell Power' to..."
+      },
+      "titleFormatted": {
+        "en": "Set 'Max Sell Power' to [[power]]W"
+      },
+      "args": [
+        {
+          "type": "number",
+          "name": "power",
+          "title": {
+            "en": "Power"
+          },
+          "min": 0,
+          "max": 65000,
+          "step": 1000
+        }
+      ]
+    },
+    {
       "id": "set_solar_sell",
       "$filter": "class=other",
       "title": { 

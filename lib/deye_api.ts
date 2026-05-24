@@ -55,6 +55,12 @@ export enum DAYS_OF_WEEK {
   SUNDAY = 'SUNDAY'
 }
 
+export enum WORK_MODE_POWER_TYPE {
+  MAX_SELL_POWER = 'MAX_SELL_POWER',
+  MAX_SOLAR_POWER = 'MAX_SOLAR_POWER',
+  ZERO_EXPORT_POWER = 'ZERO_EXPORT_POWER'
+}
+
 export interface IDeyeToken {
   accessToken: string;
   refreshToken: string; 
@@ -273,6 +279,20 @@ export default class DeyeAPI {
     }
 
     throw new Error(`Error loading Time Of Use data! (${resp})`);
+  }
+
+  async setMaxSellPower(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, power: number): Promise<IDeyeCommissionResponse> {
+    const resp = await axios.request(this.getPostRequestConfig(dc,token,'/v1.0/order/sys/power/update',{
+      powerType: WORK_MODE_POWER_TYPE.MAX_SELL_POWER,
+      value: power,
+      deviceSn
+    }));
+
+    if(resp.data?.success){
+      return resp.data;
+    }
+
+    throw new Error(`Error setting Max Sell Power property to ${power}W! (${resp})`);
   }
 
   async setSolarSell(dc: DATA_CENTER, token: IDeyeToken, deviceSn: string, value: ON_OFF): Promise<IDeyeCommissionResponse> {

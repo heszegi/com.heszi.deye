@@ -239,6 +239,10 @@ export default class DeyeStationInverter extends DeyeStationDevice {
 
   // Solar Sell
 
+  async setMaxSellPower(value: number) {
+    return this.api.setMaxSellPower(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
+  }
+
   async setSolarSell(value: ON_OFF) {
     return this.api.setSolarSell(this.dataCenter, this.token, this.station.deviceListItems[0].deviceSn, value);
   }

@@ -31,6 +31,7 @@ export default class DeyeStationDriver extends Homey.Driver {
     this.registerCapabilityCondition('grid_feeding');
     this.registerCapabilityCondition('solar_production');
 
+    this.registerCapabiltyAction('set_max_sell_power', 'setMaxSellPower', 'power');
     this.registerCapabiltyAction('set_solar_sell', 'setSolarSell', 'onoff');
     this.registerCapabiltyAction('set_work_mode', 'setWorkMode', 'workMode');
     this.registerCapabiltyAction('set_energy_pattern', 'setEnergyPattern', 'energyPattern');
