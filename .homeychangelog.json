@@ -76,5 +76,8 @@
   },
   "1.4.4": {
     "en": "Some code refactoring, updated error messages, and an improved app description."
+  },
+  "1.4.5": {
+    "en": "Add Work Mode 'Max Sell Power' action flow card and fix missing 'Daily energy buy' and 'Daily energy sell' property"
   }
 }
