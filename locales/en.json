@@ -26,6 +26,7 @@
         "inverter": {
             "unknown_value": "Invalid value!",
             "no_device_sn": "No device found!",
+            "retrie": "API error, retrying in __delay__ seconds (retry __count__)...",
             "max_retries_reached": "Max API retry limit exceeded. The app stopped querying after multiple failed attempts. Verify your internet connection or renew your login via Repair."
         },
         "solarpanel": {

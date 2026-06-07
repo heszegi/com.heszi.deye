@@ -143,13 +143,17 @@ export default class DeyeStationInverter extends DeyeStationDevice {
       this.log('Debug station data: ', JSON.stringify(this.station));
   
       if (++this.apiError < 61) {
-        const pollDelay = this.minimumPollInterval * 1000 * this.apiError;
-        this.polling = this.homey.setTimeout(this.pollLatest.bind(this), pollDelay);
+        const pollDelay = this.minimumPollInterval * this.apiError;
+        this.polling = this.homey.setTimeout(this.pollLatest.bind(this), pollDelay * 1000);
+
+        if(this.apiError > 2){
+          this.setUnavailable(this.homey.__('device.inverter.retrie',{delay: pollDelay, count: this.apiError}));
+        }
       } else {
         this.log('Reached max number of API call tries!');
+        this.setUnavailable(this.homey.__('device.inverter.max_retries_reached'));
       }
       
-      this.setUnavailable(this.homey.__('device.inverter.max_retries_reached'));
       return;
     }
 
@@ -173,8 +177,8 @@ export default class DeyeStationInverter extends DeyeStationDevice {
     }
   
     const tillNext = (latest.lastUpdateTime + this.normalPollInterval) - Math.floor(Date.now() / 1000);
-    const pollDelay = (tillNext <= 0 ? this.minimumPollInterval : tillNext) * 1000;
-    this.polling = this.homey.setTimeout(this.pollLatest.bind(this), pollDelay);
+    const pollDelay = (tillNext <= 0 ? this.minimumPollInterval : tillNext);
+    this.polling = this.homey.setTimeout(this.pollLatest.bind(this), pollDelay * 1000);
   }
 
   getLatestDataFromStation(data: IDeyeStationLatestData): ILatestData {
