@@ -25,6 +25,12 @@
           "example": 19
         },
         {
+          "name": "measure_ac_temperature",
+          "title": { "en": "Inverter temperature" },
+          "type": "number",
+          "example": 35
+        },
+        {
           "name": "measure_consumption_power",
           "title": { "en": "Power consumption" },
           "type": "number",

@@ -82,6 +82,14 @@
             "example": 19
           },
           {
+            "name": "measure_ac_temperature",
+            "title": {
+              "en": "Inverter temperature"
+            },
+            "type": "number",
+            "example": 35
+          },
+          {
             "name": "measure_consumption_power",
             "title": {
               "en": "Power consumption"
@@ -1248,6 +1256,25 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/drivers/deye_station/assets/inverter.svg"
+    },
+    "measure_ac_temperature": {
+      "type": "number",
+      "title": {
+        "en": "Inverter temperature"
+      },
+      "units": {
+        "en": "°C"
+      },
+      "insights": true,
+      "desc": {
+        "en": "The temperature of the inverter."
+      },
+      "chartType": "stepLine",
+      "decimals": 2,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/drivers/deye_station/assets/inverter_temperature.svg"
     },
     "measure_battery_power": {
       "type": "number",

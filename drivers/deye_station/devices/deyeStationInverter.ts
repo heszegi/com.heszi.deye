@@ -15,6 +15,7 @@ export interface ILatestData {
     measure_battery: number;
     measure_battery_power: number;
     measure_battery_temperature: number;
+    measure_ac_temperature: number;
     measure_consumption_power: number;
     measure_grid_power: number;
     measure_solar_power: number;
@@ -66,6 +67,7 @@ export default class DeyeStationInverter extends DeyeStationDevice {
         { id: 'measure_battery' },
         { id: 'measure_battery_power' },
         { id: 'measure_battery_temperature' },
+        { id: 'measure_ac_temperature' },
         { id: 'measure_solar_power' },
         { id: 'measure_consumption_power' },
         { id: 'measure_grid_power' },
@@ -218,6 +220,7 @@ export default class DeyeStationInverter extends DeyeStationDevice {
         measure_battery: getDeviceLatestKeyValue(data, "SOC").value,
         measure_battery_power: getDeviceLatestKeyValue(data, "BatteryPower").value,
         measure_battery_temperature: getDeviceLatestKeyValue(data, "Temperature- Battery").value,
+        measure_ac_temperature: getDeviceLatestKeyValue(data, "AC Temperature").value,
         measure_consumption_power: getDeviceLatestKeyValue(data, "TotalConsumptionPower").value,
         measure_grid_power: getDeviceLatestKeyValue(data, "TotalGridPower").value,
         measure_solar_power: getDeviceLatestKeyValue(data, "TotalSolarPower").value,
